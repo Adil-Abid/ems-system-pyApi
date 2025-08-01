@@ -4823,15 +4823,15 @@ class EmployeeTrialAPI(APIView):
     
 class EmployeeLeaveBalanceAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        cwhere = request.query_params.get('cWhere')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        vdate = request.query_params.get('VDate')        
-        isau = request.query_params.get('IsAu')
-        empid = request.query_params.get('EmpID')
-        isexport = request.query_params.get('IsExport')
-        cwherelimit = request.query_params.get('cWhereLimit')        
+        orgini = request.query_params.get('orgini')
+        cwhere = request.query_params.get('cwhere')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        vdate = request.query_params.get('vdate')        
+        isau = request.query_params.get('isau')
+        empid = request.query_params.get('empid')
+        isexport = request.query_params.get('isexport')
+        cwherelimit = request.query_params.get('cwherelimit')
 
         print(orgini, cwhere, datefrom, dateto, vdate, isau, empid, isexport, cwherelimit)
 
@@ -4857,21 +4857,21 @@ class EmployeeLeaveBalanceAPI(APIView):
     
 class AttOTFillGridAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        vdate = request.query_params.get('VDate')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        onlyot = request.query_params.get('OnlyOT')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        inflage = request.query_params.get('InFlage')
+        orgini = request.query_params.get('orgini')
+        vdate = request.query_params.get('vdate')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        onlyot = request.query_params.get('onlyot')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        inflage = request.query_params.get('inflage')
 
         try:
             rows = []
@@ -4893,27 +4893,26 @@ class AttOTFillGridAPI(APIView):
 
 class AttOTMonthFillGridAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        vdate = request.query_params.get('VDate')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        onlyot = request.query_params.get('OnlyOT')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        inflage = request.query_params.get('InFlage')
+        orgini = request.query_params.get('orgini')
+        vdate = request.query_params.get('vdate')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        onlyot = request.query_params.get('onlyot')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        inflage = request.query_params.get('inflage')
 
         try:
             rows = []
             with connection.cursor() as cursor:
-                
-                cursor.execute(""" SELECT * FROM ftentryfillotmonth(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
+                cursor.execute(""" SELECT * FROM ftentryfillotmonth(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """,
                                [orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage])
                 results = cursor.fetchall()
                 
@@ -4929,20 +4928,20 @@ class AttOTMonthFillGridAPI(APIView):
 
 class GetEmployeeGratuityDetailAPI(APIView):
     def get(self, request):
-        Orgini = request.query_params.get('Orgini')
-        EmpID = request.query_params.get('EmpID')
-        VDate = request.query_params.get('VDate')
-        UID = request.query_params.get('UID')
-        IsAu = request.query_params.get('IsAu')
-        IgnoreOld = request.query_params.get('IgnoreOld')
-        BasicSalary = request.query_params.get('BasicSalary')
+        orgini = request.query_params.get('orgini')
+        empid = request.query_params.get('empid')
+        vdate = request.query_params.get('vdate')
+        uid = request.query_params.get('uid')
+        isau = request.query_params.get('isau')
+        ignoreold = request.query_params.get('ignoreold')
+        basicsalary = request.query_params.get('basicsalary')
 
         try:
             rows = []
             with connection.cursor() as cursor:
-                
-                cursor.execute(""" SELECT * FROM fngratuitystatus(%s, %s, %s, %s, %s, %s, %s); """, [ Orgini, EmpID, VDate, UID, IsAu, IgnoreOld, BasicSalary ])
-                
+
+                cursor.execute(""" SELECT * FROM fngratuitystatus(%s, %s, %s, %s, %s, %s, %s); """, [orgini, empid, vdate, uid, isau, ignoreold, basicsalary])
+
                 results = cursor.fetchall()
                 columns = [col[0] for col in cursor.description]
                 rows = [dict(zip(columns, row)) for row in results]
@@ -4955,15 +4954,15 @@ class GetEmployeeGratuityDetailAPI(APIView):
 
 class EmployeeReportsAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        cwhere = request.query_params.get('cWhere')
-        vdate = request.query_params.get('VDate')        
-        isau = request.query_params.get('IsAu')
-        empid = request.query_params.get('EmpID')
-        isexport = request.query_params.get('IsExport')
-        compcode = request.query_params.get('Compcode')        
-        uid = request.query_params.get('UID')        
-        reporttype = request.query_params.get('ReportType')        
+        orgini = request.query_params.get('orgini')
+        cwhere = request.query_params.get('cwhere')
+        vdate = request.query_params.get('vdate')        
+        isau = request.query_params.get('isau')
+        empid = request.query_params.get('empid')
+        isexport = request.query_params.get('isexport')
+        compcode = request.query_params.get('compcode')
+        uid = request.query_params.get('uid')
+        reporttype = request.query_params.get('reporttype')
 
         print(orgini, cwhere, vdate, isau, empid, isexport, compcode, uid, reporttype)
 
@@ -5008,8 +5007,8 @@ class AttLeaveDepartmentAPI(APIView):
     def get(self, request):
         data = request.data
 
-        if data.get('VID'):
-            queryset = models.AttLeaveDepartment.objects.get(VID = data.get('VID'))
+        if data.get('vid'):
+            queryset = models.AttLeaveDepartment.objects.get(vid = data.get('vid'))
             serializer = serializers.AttLeaveDepartmentSerializer(queryset)
         else :
             queryset = models.AttLeaveDepartment.objects.all()
@@ -5024,15 +5023,15 @@ class AttLeaveDepartmentAPI(APIView):
     def post(self, request):
         data = request.data
 
-        VID = data.get('VID')
-        VName = data.get('VName')
-        DeptID = data.get('DeptID')
-        DateFrom = data.get('DateFrom')
-        DateTo = data.get('DateTo')
-        LeaveTypeID = data.get('LeaveTypeID')        
-        UID = data.get('UID')        
-        LocationID = data.get('LocationID')
-        CompanyID = data.get('CompanyID')
+        vid = data.get('vid')
+        vname = data.get('vname')
+        deptid = data.get('deptid')
+        datefrom = data.get('datefrom')
+        dateto = data.get('dateto')
+        leavetypeid = data.get('leavetypeid')
+        uid = data.get('uid')
+        locationid = data.get('locationid')
+        companyid = data.get('companyid')
 
         action = 'Insert'
 
@@ -5045,9 +5044,9 @@ class AttLeaveDepartmentAPI(APIView):
             })
         serializer.save()
         with connection.cursor() as cursor:
-            cursor.execute("""  CALL spentryattleavedepartment(%s, %s, %s, %s, %s, %s, %s, %s, %s) """, 
-                               [ VName, DeptID, DateFrom, DateTo, LeaveTypeID, UID, LocationID, CompanyID, action ])
-        
+            cursor.execute("""  CALL spentryattleavedepartment(%s, %s, %s, %s, %s, %s, %s, %s, %s) """,
+                               [ vname, deptid, datefrom, dateto, leavetypeid, uid, locationid, companyid, action ])
+
         return Response({
             "status": "0",
             "message": "data save",
@@ -5057,14 +5056,14 @@ class AttLeaveDepartmentAPI(APIView):
     def put (self, request):
         data = request.data
         
-        if not data.get('VID'):
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
                 "error": 'id is required',
             })
-        
-        attLeaveDepartment = models.AttLeaveDepartment.objects.get(VID = data.get('VID'))
+
+        attLeaveDepartment = models.AttLeaveDepartment.objects.get(vid = data.get('vid'))
         serializer = serializers.AttLeaveDepartmentSerializer(attLeaveDepartment, data=request.data)
         
         if not serializer.is_valid():
@@ -5083,31 +5082,31 @@ class AttLeaveDepartmentAPI(APIView):
     def delete(self, request):
         data = request.data
 
-        VID = data.get('VID')
-        VName = data.get('VName')
-        DeptID = data.get('DeptID')
-        DateFrom = data.get('DateFrom')
-        DateTo = data.get('DateTo')
-        LeaveTypeID = data.get('LeaveTypeID')        
-        UID = data.get('UID')        
-        LocationID = data.get('LocationID')
-        CompanyID = data.get('CompanyID')
+        vid = data.get('vid')
+        vname = data.get('vname')
+        deptid = data.get('deptid')
+        datefrom = data.get('datefrom')
+        dateto = data.get('dateto')
+        leavetypeid = data.get('leavetypeid')        
+        uid = data.get('uid')        
+        locationid = data.get('locationid')
+        companyid = data.get('companyid')
 
         action = 'Delete'
 
-        print (VID, VName, DeptID, DateFrom, DateTo, LeaveTypeID, UID, LocationID, CompanyID)
+        print (vid, vname, deptid, datefrom, dateto, leavetypeid, uid, locationid, companyid)
 
-        if not data.get('VID'):
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
                 "error": 'id is required',
             })
 
-        attLeaveDepartment = models.AttLeaveDepartment.objects.get(VID = data.get('VID')).delete()
+        attLeaveDepartment = models.AttLeaveDepartment.objects.get(vid = data.get('vid')).delete()
         with connection.cursor() as cursor:
-            cursor.execute("""  CALL spentryattleavedepartment(%s, %s, %s, %s, %s, %s, %s, %s, %s) """, 
-                               [ VName, DeptID, DateFrom, DateTo, LeaveTypeID, UID, LocationID, CompanyID, action ])
+            cursor.execute("""  CALL spentryattleavedepartment(%s, %s, %s, %s, %s, %s, %s, %s, %s) """,
+                               [ vname, deptid, datefrom, dateto, leavetypeid, uid, locationid, companyid, action ])
         return Response({
             "status": "0",
             "message": "data deleted",
@@ -5118,8 +5117,8 @@ class AttExemptLateAPI(APIView):
     def get(self, request):
         data = request.data
 
-        if data.get('VID'):
-            queryset = models.AttExemptLate.objects.get(VID = data.get('VID'))
+        if data.get('vid'):
+            queryset = models.AttExemptLate.objects.get(vid = data.get('vid'))
             serializer = serializers.AttExemptLateSerializer(queryset)
         else :
             queryset = models.AttExemptLate.objects.all()
@@ -5151,15 +5150,15 @@ class AttExemptLateAPI(APIView):
     
     def put (self, request):
         data = request.data
-        
-        if not data.get('VID'):
+
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
                 "error": 'id is required',
             })
-        
-        attExemptLate = models.AttExemptLate.objects.get(VID = data.get('VID'))
+
+        attExemptLate = models.AttExemptLate.objects.get(vid = data.get('vid'))
         serializer = serializers.AttExemptLateSerializer(attExemptLate, data=request.data)
         
         if not serializer.is_valid():
@@ -5178,14 +5177,14 @@ class AttExemptLateAPI(APIView):
     def delete(self, request):
         data = request.data
 
-        if not data.get('VID'):
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
                 "error": 'id is required',
             })
 
-        attExemptLate = models.AttExemptLate.objects.get(VID = data.get('VID')).delete()
+        attExemptLate = models.AttExemptLate.objects.get(vid = data.get('vid')).delete()
         
         return Response({
             "status": "0",
@@ -5195,18 +5194,18 @@ class AttExemptLateAPI(APIView):
 
 class RptATTDailyUnpostedAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        vdate = request.query_params.get('VDate')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')              
+        orgini = request.query_params.get('orgini')
+        vdate = request.query_params.get('vdate')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         print(orgini, vdate, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid)
 
@@ -5232,18 +5231,18 @@ class RptATTDailyUnpostedAPI(APIView):
 
 class RptATTDailyPostedAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        vdate = request.query_params.get('VDate')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')              
+        orgini = request.query_params.get('orgini')
+        vdate = request.query_params.get('vdate')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         print(orgini, vdate, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid)
 
@@ -5269,18 +5268,18 @@ class RptATTDailyPostedAPI(APIView):
 
 class RptATTDailyLateAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        vdate = request.query_params.get('VDate')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')              
+        orgini = request.query_params.get('orgini')
+        vdate = request.query_params.get('vdate')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         print(orgini, vdate, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid)
 
@@ -5306,18 +5305,18 @@ class RptATTDailyLateAPI(APIView):
 
 class RptATTDailyABAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        vdate = request.query_params.get('VDate')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
+        orgini = request.query_params.get('orgini')
+        vdate = request.query_params.get('vdate')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         print(orgini, vdate, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid)
 
@@ -5357,19 +5356,19 @@ class RptATTDailyABAPI(APIView):
         
 class RptATTMonthStatusAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         # print(orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
 
@@ -5392,19 +5391,19 @@ class RptATTMonthStatusAPI(APIView):
 
 class RptATTMonthSummaryAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         # print(orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
 
@@ -5427,19 +5426,19 @@ class RptATTMonthSummaryAPI(APIView):
 
 class RptATTMonthAttendanceAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         try:
             rows = []
@@ -5460,19 +5459,19 @@ class RptATTMonthAttendanceAPI(APIView):
 
 class RptATTMonthABAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         try:
             rows = []
@@ -5493,19 +5492,19 @@ class RptATTMonthABAPI(APIView):
 
 class RptATTMonthLeaveAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         try:
             rows = []
@@ -5546,8 +5545,8 @@ class AttRosterAPI(APIView):
     def get(self, request):
         data = request.data
 
-        if data.get('VID'):
-            queryset = models.AttRoster.objects.get(VID = data.get('VID'))
+        if data.get('vid'):
+            queryset = models.AttRoster.objects.get(vid = data.get('vid'))
             serializer = serializers.AttRosterSerializer(queryset)
         else :
             queryset = models.AttRoster.objects.all()
@@ -5578,22 +5577,22 @@ class AttRosterAPI(APIView):
     
     def put (self, request):
         data = request.data
-        
-        if not data.get('VID'):
+
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
                 "error": 'id is required',
             })
-        
-        if not data.get('VID'):
+
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not updated",
                 "error": 'id is required',
             }, status = status.HTTP_400_BAD_REQUEST)
 
-        attRoster = models.AttRoster.objects.get(VID = data.get('VID'))
+        attRoster = models.AttRoster.objects.get(vid = data.get('vid'))
         serializer = serializers.AttRosterSerializer(attRoster, data=request.data)
         
         if not serializer.is_valid():
@@ -5612,14 +5611,14 @@ class AttRosterAPI(APIView):
     def delete(self, request):
         data = request.data
 
-        if not data.get('VID'):
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
                 "error": 'id is required',
             })
 
-        attRoster = models.AttRoster.objects.get(VID = data.get('VID')).delete()
+        attRoster = models.AttRoster.objects.get(vid = data.get('vid')).delete()
         return Response({
             "status": "0",
             "message": "data deleted",
@@ -5630,8 +5629,8 @@ class AttEntryRosterMonthAPI(APIView):
     def get(self, request):
         data = request.data
 
-        if data.get('VID'):
-            queryset = models.AttEntryRosterMonth.objects.get(VID = data.get('VID'))
+        if data.get('vid'):
+            queryset = models.AttEntryRosterMonth.objects.get(vid = data.get('vid'))
             serializer = serializers.AttEntryRosterMonthSerializer(queryset)
         else :
             queryset = models.AttEntryRosterMonth.objects.all()
@@ -5662,15 +5661,15 @@ class AttEntryRosterMonthAPI(APIView):
     
     def put (self, request):
         data = request.data
-        
-        if not data.get('VID'):
+
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
                 "error": 'id is required',
             })
 
-        attEntryRosterMonth = models.AttEntryRosterMonth.objects.get(VID = data.get('VID'))
+        attEntryRosterMonth = models.AttEntryRosterMonth.objects.get(vid = data.get('vid'))
         serializer = serializers.AttEntryRosterMonthSerializer(attEntryRosterMonth, data=request.data)
         
         if not serializer.is_valid():
@@ -5689,14 +5688,14 @@ class AttEntryRosterMonthAPI(APIView):
     def delete(self, request):
         data = request.data
 
-        if not data.get('VID'):
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
                 "error": 'id is required',
             })
 
-        attEntryRosterMonth = models.AttEntryRosterMonth.objects.get(VID = data.get('EmpID')).delete()
+        attEntryRosterMonth = models.AttEntryRosterMonth.objects.get(vid = data.get('vid')).delete()
         return Response({
             "status": "0",
             "message": "data deleted",
@@ -5716,20 +5715,20 @@ class GetRosterShiftAPI(APIView):
 
 class RptOverTimeSheetAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        showPer = request.query_params.get('ShowPer')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        showper = request.query_params.get('showper')
 
         try:
             rows = []
@@ -5750,20 +5749,20 @@ class RptOverTimeSheetAPI(APIView):
 
 class RptOverTimeSheetSummaryAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        showPer = request.query_params.get('ShowPer')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        showPer = request.query_params.get('showPer')
 
         try:
             rows = []
@@ -5784,20 +5783,20 @@ class RptOverTimeSheetSummaryAPI(APIView):
 
 class RptFinalSettlementAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        showPer = request.query_params.get('ShowPer')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        showPer = request.query_params.get('showPer')
 
         try:
             rows = []
@@ -5818,20 +5817,20 @@ class RptFinalSettlementAPI(APIView):
 
 class RptMonthSalarySheetAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        showPer = request.query_params.get('ShowPer')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        showPer = request.query_params.get('showPer')
 
         try:
             rows = []
@@ -5852,20 +5851,20 @@ class RptMonthSalarySheetAPI(APIView):
 
 class RptSalaryEmployeeAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        showPer = request.query_params.get('ShowPer')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        showPer = request.query_params.get('showPer')
 
         try:
             rows = []
@@ -5886,20 +5885,20 @@ class RptSalaryEmployeeAPI(APIView):
 
 class RptMonthSalarySummaryAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        showPer = request.query_params.get('ShowPer')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        showPer = request.query_params.get('showPer')
 
         try:
             rows = []
@@ -5920,16 +5919,16 @@ class RptMonthSalarySummaryAPI(APIView):
 
 class PaymentPlanFillGridAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        vdate = request.query_params.get('VDate')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
+        orgini = request.query_params.get('orgini')
+        vdate = request.query_params.get('vdate')
+        employeeidlist = request.query_params.get('employeeidlist')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         try:
             rows = []
@@ -5989,20 +5988,20 @@ class PaymentPlanFillGridAPI(APIView):
 
 class RptMonthSalaryDeductionAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        showPer = request.query_params.get('ShowPer')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        showPer = request.query_params.get('showPer')
 
         try:
             rows = []
@@ -6023,27 +6022,27 @@ class RptMonthSalaryDeductionAPI(APIView):
 
 class RptMonthSalaryDeductionSumAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        datefrom = request.query_params.get('DateFrom')
-        dateto = request.query_params.get('DateTo')
-        deptids = request.query_params.get('DeptIDs')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        cwhere = request.query_params.get('cWhere')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
-        showPer = request.query_params.get('ShowPer')
+        orgini = request.query_params.get('orgini')
+        datefrom = request.query_params.get('datefrom')
+        dateto = request.query_params.get('dateto')
+        deptids = request.query_params.get('deptids')
+        employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
+        showPer = request.query_params.get('showPer')
 
         try:
             rows = []
             with connection.cursor() as cursor:
 
-                cursor.execute(""" SELECT * FROM ftrptmonthsalaryallowdedsum(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer ])
+                cursor.execute(""" SELECT * FROM ftrptmonthsalaryallowdedsum(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """,
+                               [orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -6057,16 +6056,16 @@ class RptMonthSalaryDeductionSumAPI(APIView):
 
 class PaymentPlanFillGridAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('Orgini')
-        vdate = request.query_params.get('VDate')
-        employeeidlist = request.query_params.get('EmployeeIDList')
-        companyid = request.query_params.get('CompanyID')
-        locationid = request.query_params.get('LocationID')
-        etypeid = request.query_params.get('ETypeID')
-        empid = request.query_params.get('EmpID')
-        isau = request.query_params.get('IsAu')
-        isexport = request.query_params.get('IsExport')
-        uid = request.query_params.get('UID')
+        orgini = request.query_params.get('orgini')
+        vdate = request.query_params.get('vdate')
+        employeeidlist = request.query_params.get('employeeidlist')
+        companyid = request.query_params.get('companyid')
+        locationid = request.query_params.get('locationid')
+        etypeid = request.query_params.get('etypeid')
+        empid = request.query_params.get('empid')
+        isau = request.query_params.get('isau')
+        isexport = request.query_params.get('isexport')
+        uid = request.query_params.get('uid')
 
         try:
             rows = []
