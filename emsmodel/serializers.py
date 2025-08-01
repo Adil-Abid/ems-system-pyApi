@@ -285,7 +285,7 @@ class EmpLocationTransferSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        last_vno = models.EmpLocationTransfer.objects.order_by('-VID').first()
+        last_vno = models.EmpLocationTransfer.objects.order_by('-vid').first()
         if last_vno and last_vno.vno:
             last_number = int(last_vno.vno.replace('v-', ''))
         else:
@@ -361,7 +361,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
         self.fields['eobinoact'].required = False
         self.fields['ssno'].required = False
         self.fields['lifeinsuranceno'].required = False
-        self.fields['pfamount'].required = False
+        self.fields['ispfund'].required = False
         self.fields['pfamount'].required = False
         self.fields['education'].required = False
         self.fields['enameurdu'].required = False
