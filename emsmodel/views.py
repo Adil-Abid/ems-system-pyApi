@@ -1625,21 +1625,21 @@ class AttGroupAPI(APIView):
             "data" : serializer.data
         })
 
-    # def post(self, request):
-    #     data = request.data
-    #     serializer = AttGroupSerializer(data = data)
-    #     if not serializer.is_valid():
-    #         return Response({
-    #             "status": "2",
-    #             "message": "data not saved",
-    #             "error": serializer.errors,
-    #         })
-    #     serializer.save()
-    #     return Response({
-    #         "status": "0",
-    #         "message": "data save",
-    #         "data": serializer.data
-    #     })
+    def post(self, request):
+        data = request.data
+        serializer = serializers.AttGroupSerializer(data = data)
+        if not serializer.is_valid():
+            return Response({
+                "status": "2",
+                "message": "data not saved",
+                "error": serializer.errors,
+            })
+        serializer.save()
+        return Response({
+            "status": "0",
+            "message": "data save",
+            "data": serializer.data
+        })
     
     # def put (self, request):
     #     data = request.data
