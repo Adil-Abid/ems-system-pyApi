@@ -27,7 +27,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.18.59', '192.168.18.57', '192.168.18.58', '172.16.1.114']
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.18.65', '192.168.1.47']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.18.65', '192.168.1.47','192.168.18.59']
 
 
 # Application definition
@@ -60,6 +60,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://192.168.18.72:3000",
+    "http://192.168.18.59:3000",
     "https://emszeta.netlify.app",
 ]
 
@@ -104,7 +105,7 @@ DATABASES = {
       'default': {
         'ENGINE': 'django.db.backends.postgresql',
         # 'NAME': 'EMSDBU',           # PostgreSQL database name
-        'NAME': 'EMSDB',           # PostgreSQL database name
+        'NAME': 'emsdb',           # PostgreSQL database name
         'USER': 'postgres',         # PostgreSQL user
         'PASSWORD': 'admin123', # PostgreSQL password
         'HOST': 'localhost',      # PostgreSQL server ka host

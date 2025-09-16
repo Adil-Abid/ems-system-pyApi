@@ -8,6 +8,9 @@ from emsmodel import serializers
 from django.db import connection
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError, IntegrityError, OperationalError, ProgrammingError
+import json
+from datetime import datetime
+from django.utils import timezone
 
 # from django.db import transaction
 # import psycopg2
@@ -146,14 +149,14 @@ class CompanyAPI(APIView):
     # def patch(self, request):
     #     data = request.data
 
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         }, status = status.HTTP_400_BAD_REQUEST)
 
-    #     company = models.Company.objects.get(VID = data.get('VID'))
+    #     company = models.Company.objects.get(vid = data.get('vid'))
     #     serializer = serializers.CompanySerializer(
     #         company, data=data, partial=True)
 
@@ -229,14 +232,14 @@ class DepartmentAPI(APIView):
     # def patch(self, request):
     #     data = request.data
 
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not updated",
     #             "error": 'id is required',
     #         }, status = status.HTTP_400_BAD_REQUEST)
 
-    #     department = models.Department.objects.get(VID = data.get('VID'))
+    #     department = models.Department.objects.get(vid = data.get('vid'))
     #     serializer = serializers.DepartmentSerializer(
     #         department, data=data, partial=True)
 
@@ -298,7 +301,7 @@ class DepartmentAPI(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
-        # if data.get('VID') == 0:
+        # if data.get('vid') == 0:
         #     if models.Department.objects.filter(VCode = data.get("VCode")).exists():
         #         return Response({
         #             "status": "1",
@@ -452,7 +455,7 @@ class DepartmentGroupAPI(APIView):
                 "error": "Duplicate Urdu Name not allowed",
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # if data.get('VID') == 0:
+        # if data.get('vid') == 0:
         #     if models.DepartmentGroup.objects.filter(VCode = data.get("VCode")).exists():
         #         return Response({
         #             "status": "1",
@@ -635,7 +638,7 @@ class LocationAPI(APIView):
                 "error": "Duplicate Urdu Name not allowed",
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # if data.get('VID') == 0:
+        # if data.get('vid') == 0:
         #     if models.Location.objects.filter(VCode = data.get("VCode")).exists():
         #         return Response({
         #             "status": "1",
@@ -896,14 +899,14 @@ class DesignationAPI(APIView):
     # def delete(self, request):
     #     data = request.data
 
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         }, status = status.HTTP_400_BAD_REQUEST)
 
-    #     designation = models.Designation.objects.get(VID = data.get('VID')).delete()
+    #     designation = models.Designation.objects.get(vid = data.get('vid')).delete()
     #     return Response({
     #         "status": "0",
     #         "message": "data deleted",
@@ -1008,7 +1011,7 @@ class GradeAPI(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
-        # if data.get('VID') == 0:
+        # if data.get('vid') == 0:
         #     if models.Grade.objects.filter(VCode = data.get("VCode")).exists():
         #         return Response({
         #             "status": "1",
@@ -1163,7 +1166,7 @@ class BankAPI(APIView):
                 "error": "Duplicate Urdu Name not allowed",
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        # if data.get('VID') == 0:
+        # if data.get('vid') == 0:
         #     if models.Bank.objects.filter(VCode = data.get("VCode")).exists():
         #         return Response({
         #             "status": "1",
@@ -1255,13 +1258,13 @@ class AllowDedCatAPI(APIView):
     # def put (self, request):
     #     data = request.data
         
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         })
-    #     allDedCat = AllowDedCat.objects.get(VID = data.get('VID'))
+    #     allDedCat = AllowDedCat.objects.get(vid = data.get('vid'))
     #     serializer = AllowDedCatSerializer(allDedCat, data=request.data)
         
     #     if not serializer.is_valid():
@@ -1280,14 +1283,14 @@ class AllowDedCatAPI(APIView):
     # def delete(self, request):
     #     data = request.data
 
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         })
 
-    #     allowDedCat = AllowDedCat.objects.get(VID = data.get('VID')).delete()
+    #     allowDedCat = AllowDedCat.objects.get(vid = data.get('vid')).delete()
     #     return Response({
     #         "status": "0",
     #         "message": "data deleted",
@@ -1298,8 +1301,8 @@ class AllowDedAPI(APIView):
     def get(self, request):
         data = request.data
 
-        if data.get('VID'):
-            queryset = models.AllowDed.objects.get(VID = data.get('VID'))
+        if data.get('vid'):
+            queryset = models.AllowDed.objects.get(vid = data.get('vid'))
             serializer = serializers.AllowDedSerializer(queryset)
         else :
             queryset = models.AllowDed.objects.all()
@@ -1438,13 +1441,13 @@ class AllowDedGroupAPI(APIView):
     # def put (self, request):
     #     data = request.data
         
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         })
-    #     allowDedGroup = AllowDedGroup.objects.get(VID = data.get('VID'))
+    #     allowDedGroup = AllowDedGroup.objects.get(vid = data.get('vid'))
     #     serializer = AllowDedGroupSerializer(allowDedGroup, data=request.data)
         
     #     if not serializer.is_valid():
@@ -1463,14 +1466,14 @@ class AllowDedGroupAPI(APIView):
     # def delete(self, request):
     #     data = request.data
 
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         })
 
-    #     allowDedGroup = AllowDedGroup.objects.get(VID = data.get('VID')).delete()
+    #     allowDedGroup = AllowDedGroup.objects.get(vid = data.get('vid')).delete()
     #     return Response({
     #         "status": "0",
     #         "message": "data deleted",
@@ -1560,7 +1563,7 @@ class AttCodeAPI(APIView):
                 "error": "Duplicate VName not allowed",
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # if data.get('VID') == 0:
+        # if data.get('vid') == 0:
         #     if models.AttCode.objects.filter(VCode = data.get("VCode")).exists():
         #         return Response({
         #             "status": "1",
@@ -1644,13 +1647,13 @@ class AttGroupAPI(APIView):
     # def put (self, request):
     #     data = request.data
         
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         })
-    #     attGroup = AttGroup.objects.get(VID = data.get('VID'))
+    #     attGroup = AttGroup.objects.get(vid = data.get('vid'))
     #     serializer = AttGroupSerializer(attGroup, data=request.data)
         
     #     if not serializer.is_valid():
@@ -1669,14 +1672,14 @@ class AttGroupAPI(APIView):
     # def delete(self, request):
     #     data = request.data
 
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         })
 
-    #     attGroup = AttGroup.objects.get(VID = data.get('VID')).delete()
+    #     attGroup = AttGroup.objects.get(vid = data.get('vid')).delete()
     #     return Response({
     #         "status": "0",
     #         "message": "data deleted",
@@ -1815,7 +1818,7 @@ class HolidayAPI(APIView):
     def put (self, request):
         data = request.data
         
-        if not data.get('VID'):
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
@@ -1862,80 +1865,80 @@ class HolidayAPI(APIView):
             "data": {}
         })
     
-class LeaveBalanceAPI(APIView):
-    def get(self, request):
-        data = request.data
+# class LeaveBalanceAPI(APIView):
+#     def get(self, request):
+#         data = request.data
 
-        if data.get('vid'):
-            queryset = models.LeaveBalance.objects.get(vid = data.get('vid'))
-            serializer = serializers.LeaveBalanceSerializer(queryset)
-        else :
-            queryset = models.LeaveBalance.objects.all()
-            serializer = serializers.LeaveBalanceSerializer(queryset, many = True)
+#         if data.get('vid'):
+#             queryset = models.LeaveBalance.objects.get(vid = data.get('vid'))
+#             serializer = serializers.LeaveBalanceSerializer(queryset)
+#         else :
+#             queryset = models.LeaveBalance.objects.all()
+#             serializer = serializers.LeaveBalanceSerializer(queryset, many = True)
         
-        return Response ({
-            "status": "0",
-            "message": "success",
-            "data" : serializer.data
-        })
+#         return Response ({
+#             "status": "0",
+#             "message": "success",
+#             "data" : serializer.data
+#         })
 
-    def post(self, request):
-        data = request.data
-        serializer = serializers.LeaveBalanceSerializer(data = data)
-        if not serializer.is_valid():
-            return Response({
-                "status": "2",
-                "message": "data not saved",
-                "error": serializer.errors,
-            })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data save",
-            "data": serializer.data
-        })
+#     def post(self, request):
+#         data = request.data
+#         serializer = serializers.LeaveBalanceSerializer(data = data)
+#         if not serializer.is_valid():
+#             return Response({
+#                 "status": "2",
+#                 "message": "data not saved",
+#                 "error": serializer.errors,
+#             })
+#         serializer.save()
+#         return Response({
+#             "status": "0",
+#             "message": "data save",
+#             "data": serializer.data
+#         })
     
-    def put (self, request):
-        data = request.data
+#     def put (self, request):
+#         data = request.data
 
-        if not data.get('vid'):
-            return Response({
-                "status": "2",
-                "message": "data not saved",
-                "error": 'id is required',
-            })
-        leaveBalance = models.LeaveBalance.objects.get(vid = data.get('vid'))
-        serializer = serializers.LeaveBalanceSerializer(leaveBalance, data=request.data)
+#         if not data.get('vid'):
+#             return Response({
+#                 "status": "2",
+#                 "message": "data not saved",
+#                 "error": 'id is required',
+#             })
+#         leaveBalance = models.LeaveBalance.objects.get(vid = data.get('vid'))
+#         serializer = serializers.LeaveBalanceSerializer(leaveBalance, data=request.data)
         
-        if not serializer.is_valid():
-            return Response({
-                "status": "2",
-                "message": "data not updated",
-                "error": serializer.errors,
-            })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data updated",
-            "data": serializer.data
-        })
+#         if not serializer.is_valid():
+#             return Response({
+#                 "status": "2",
+#                 "message": "data not updated",
+#                 "error": serializer.errors,
+#             })
+#         serializer.save()
+#         return Response({
+#             "status": "0",
+#             "message": "data updated",
+#             "data": serializer.data
+#         })
     
-    def delete(self, request):
-        data = request.data
+#     def delete(self, request):
+#         data = request.data
 
-        if not data.get('vid'):
-            return Response({
-                "status": "2",
-                "message": "data not saved",
-                "error": 'id is required',
-            })
+#         if not data.get('vid'):
+#             return Response({
+#                 "status": "2",
+#                 "message": "data not saved",
+#                 "error": 'id is required',
+#             })
 
-        leaveBalance = models.LeaveBalance.objects.get(vid = data.get('vid')).delete()
-        return Response({
-            "status": "0",
-            "message": "data deleted",
-            "data": {}
-        })
+#         leaveBalance = models.LeaveBalance.objects.get(vid = data.get('vid')).delete()
+#         return Response({
+#             "status": "0",
+#             "message": "data deleted",
+#             "data": {}
+#         })
     
 class LeaveTypeAPI(APIView):
     def get(self, request):
@@ -2164,7 +2167,7 @@ class SalaryAllowDedAPI(APIView):
     def put (self, request):
         data = request.data
         
-        if not data.get('VID'):
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
@@ -2211,7 +2214,7 @@ class SalaryAdvanceAPI(APIView):
             queryset = models.SalaryAllowDed.objects.get(vid = data.get('vid'))
             serializer = serializers.SalaryAllowDedSerializer(queryset)
         else :
-            queryset = models.SalaryAllowDed.objects.filter(AllowDedID=6)
+            queryset = models.SalaryAllowDed.objects.filter(allowdedid=6)
             serializer = serializers.SalaryAllowDedSerializer(queryset, many = True)
         
         return Response ({
@@ -2228,7 +2231,7 @@ class LocalSaleAPI(APIView):
             queryset = models.SalaryAllowDed.objects.get(vid = data.get('vid'))
             serializer = serializers.SalaryAllowDedSerializer(queryset)
         else :
-            queryset = models.SalaryAllowDed.objects.filter(AllowDedID=16)
+            queryset = models.SalaryAllowDed.objects.filter(allowdedid=16)
             serializer = serializers.SalaryAllowDedSerializer(queryset, many = True)
         
         return Response ({
@@ -2404,63 +2407,164 @@ class AttMainAPI(APIView):
             "data" : serializer.data
         })
 
+    # def post(self, request):
+    #     data = request.data
+    #     serializer = serializers.AttMainSerializer(data = data)
+    #     if not serializer.is_valid():
+    #         return Response({
+    #             "status": "2",
+    #             "message": "data not saved",
+    #             "error": serializer.errors,
+    #         })
+    #     serializer.save()
+    #     return Response({
+    #         "status": "0",
+    #         "message": "data save",
+    #         "data": serializer.data
+    #     })
+    
+    # def put (self, request):
+    #     data = request.data
+
+    #     if not data.get('vid'):
+    #         return Response({
+    #             "status": "2",
+    #             "message": "data not saved",
+    #             "error": 'id is required',
+    #         })
+    #     attMain = models.AttMain.objects.get(vid = data.get('vid'))
+    #     serializer = serializers.AttMainSerializer(attMain, data=request.data)
+        
+    #     if not serializer.is_valid():
+    #         return Response({
+    #             "status": "2",
+    #             "message": "data not updated",
+    #             "error": serializer.errors,
+    #         })
+    #     serializer.save()
+    #     return Response({
+    #         "status": "0",
+    #         "message": "data updated",
+    #         "data": serializer.data
+    #     })
+
     def post(self, request):
         data = request.data
-        serializer = serializers.AttMainSerializer(data = data)
-        if not serializer.is_valid():
-            return Response({
-                "status": "2",
-                "message": "data not saved",
-                "error": serializer.errors,
-            })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data save",
-            "data": serializer.data
-        })
-    
-    def put (self, request):
-        data = request.data
 
-        if not data.get('vid'):
+        # call your function instead of serializer.save()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT * FROM public.ftsavetblattmain(
+                        %s,%s,%s,%s,%s,
+                        %s,%s,%s,%s,
+                        %s,%s,%s
+                    )
+                """, [
+                    data.get("empid"),
+                    data.get("vdate"),
+                    data.get("vid1", 0),
+                    data.get("vid2", 0),
+                    data.get("shiftid"),
+                    data.get("datein1"),
+                    data.get("dateout1"),
+                    data.get("datein2"),
+                    data.get("dateout2"),
+                    data.get("remarks"),
+                    data.get("uid"),
+                    data.get("computername"),
+                ])
+                result = cursor.fetchall()
+            
+            return Response({
+                "status": result[0][1],   # status text
+                "message": result[0][2],  # msg from function
+                "data": {"vid": result[0][0]}
+            })
+        except Exception as e:
             return Response({
                 "status": "2",
-                "message": "data not saved",
-                "error": 'id is required',
+                "message": "error calling function",
+                "error": str(e)
             })
-        attMain = models.AttMain.objects.get(vid = data.get('vid'))
-        serializer = serializers.AttMainSerializer(attMain, data=request.data)
-        
-        if not serializer.is_valid():
+
+    def put(self, request):
+        data = request.data
+        if not data.get('vid1') and not data.get('vid2'):
             return Response({
                 "status": "2",
-                "message": "data not updated",
-                "error": serializer.errors,
+                "message": "vid1 or vid2 required"
             })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data updated",
-            "data": serializer.data
-        })
-    
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT * FROM public.ftsavetblattmain(
+                        %s,%s,%s,%s,%s,
+                        %s,%s,%s,%s,
+                        %s,%s,%s
+                    )
+                """, [
+                    data.get("empid"),
+                    data.get("vdate"),
+                    data.get("vid1", 0),
+                    data.get("vid2", 0),
+                    data.get("shiftid"),
+                    data.get("datein1"),
+                    data.get("dateout1"),
+                    data.get("datein2"),
+                    data.get("dateout2"),
+                    data.get("remarks"),
+                    data.get("uid"),
+                    data.get("computername"),
+                ])
+                result = cursor.fetchall()
+            
+            return Response({
+                "status": result[0][1],
+                "message": result[0][2],
+                "data": {"vid": result[0][0]}
+            })
+        except Exception as e:
+            return Response({
+                "status": "2",
+                "message": "error calling function",
+                "error": str(e)
+            })
+
     def delete(self, request):
         data = request.data
 
         if not data.get('vid'):
             return Response({
                 "status": "2",
-                "message": "data not saved",
+                "message": "data not deleted",
                 "error": 'id is required',
             })
 
-        attMain = models.AttMain.objects.get(vid = data.get('vid')).delete()
+        models.AttMain.objects.filter(vid=data.get('vid')).delete()
         return Response({
             "status": "0",
             "message": "data deleted",
             "data": {}
         })
+    
+    # def delete(self, request):
+    #     data = request.data
+
+    #     if not data.get('vid'):
+    #         return Response({
+    #             "status": "2",
+    #             "message": "data not saved",
+    #             "error": 'id is required',
+    #         })
+
+    #     attMain = models.AttMain.objects.get(vid = data.get('vid')).delete()
+    #     return Response({
+    #         "status": "0",
+    #         "message": "data deleted",
+    #         "data": {}
+    #     })
     
 class EmployeeLast10AttRecordsAPI(APIView):
     def get(self, request):
@@ -2552,61 +2656,152 @@ class AttClosingDayAPI(APIView):
 
 class AttLeaveAPI(APIView):
     def get(self, request):
-        data = request.data
+        try:
+            # Extract parameters from request query params or set defaults
+            p_orgini = request.query_params.get('orgini', 'LTT')  # Example default
+            p_datefrom = request.query_params.get('2025-01-01', datetime.now().replace(day=1).date())  # Start of current month
+            p_dateto = request.query_params.get('dateto', datetime.now().date())  # Current date
+            p_deptids = request.query_params.get('deptids', '')  # Empty string as default
+            p_employeeidlist = request.query_params.get('employeeidlist', '')  # Empty string as default
+            p_companyid = request.query_params.get('companyid', 1)  # Default company ID
+            p_locationid = request.query_params.get('locationid', 0)  # Default location ID
+            p_etypeid = request.query_params.get('etypeid', 1)  # Default employee type ID
+            p_empid = request.query_params.get('empid', 0)  # Default employee ID
+            p_isau = request.query_params.get('isau', 0)  # Default isau
+            p_onlyot = request.query_params.get('onlyot', 0)  # Default onlyot
+            p_isexport = request.query_params.get('isexport', 0)  # Default isexport
+            p_uid = request.query_params.get('uid', 0)  # Default user ID
+            p_inflage = request.query_params.get('inflage', 0)  # Default inflage
 
-        if data.get('vid'):
-            queryset = models.AttLeave.objects.get(vid = data.get('vid'))
-            serializer = serializers.AttLeaveSerializer(queryset)
-        else :
-            queryset = models.AttLeave.objects.all()
-            serializer = serializers.AttLeaveSerializer(queryset, many = True)
-        
-        return Response ({
-            "status": "0",
-            "message": "success",
-            "data" : serializer.data
-        })
+            # Construct the raw SQL query to call the function
+            query = """
+                SELECT * FROM public.ftfillgridattleave(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            params = [
+                p_orgini,
+                p_datefrom,
+                p_dateto,
+                p_deptids,
+                p_employeeidlist,
+                p_companyid,
+                p_locationid,
+                p_etypeid,
+                p_empid,
+                p_isau,
+                p_onlyot,
+                p_isexport,
+                p_uid,
+                p_inflage
+            ]
+
+            # Execute the raw SQL query
+            with connection.cursor() as cursor:
+                cursor.execute(query, params)
+                columns = [col[0] for col in cursor.description]  # Get column names
+                rows = cursor.fetchall()
+
+            # Convert the results to a list of dictionaries
+            data = [dict(zip(columns, row)) for row in rows]
+
+            # Format dates and other fields as needed
+            for item in data:
+                if item['vdate']:
+                    item['vdate'] = item['vdate'].isoformat()  # Convert date to ISO string
+                # Add any other formatting if needed (e.g., handling nulls)
+
+            return Response({
+                "status": "0",
+                "message": "success",
+                "data": data
+            })
+
+        except Exception as e:
+            return Response({
+                "status": "1",
+                "message": f"Error fetching leave data: {str(e)}",
+                "data": []
+            }, status=500)
 
     def post(self, request):
-        data = request.data
-        serializer = serializers.AttLeaveSerializer(data = data)
-        if not serializer.is_valid():
-            return Response({
-                "status": "2",
-                "message": "data not saved",
-                "error": serializer.errors,
-            })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data save",
-            "data": serializer.data
-        })
-    
-    def put (self, request):
-        data = request.data
+        try:
+            data = request.data
+            
+            # Extract parameters from request data
+            p_vid = data.get('vid', 0)
+            p_vname = data.get('vname', '')
+            p_vno = data.get('vno', '')
+            p_empid = data.get('empid', 0)
+            p_vdate = data.get('datefrom', datetime.now().date())  # Using datefrom as vdate
+            p_shiftid = data.get('shiftid', 0)
+            p_leavetypeid = data.get('leavetypeid', 0)
+            p_contactnumber = data.get('contactnumber', '')
+            p_isapproved = data.get('isapproved', 0)
+            p_approvedby = data.get('approvedby', 0)
+            # p_approveddate = data.get('approveddate', None)
+            p_approveddate = data.get('approveddate', timezone.now().date())
+            p_isposted = data.get('isposted', 0)
+            p_postedby = data.get('postedby', 0)
+            # p_posteddate = data.get('posteddate', None)
+            p_posteddate = data.get('posteddate', timezone.now().date())  # OPTIONAL: Add default for posteddate if it has NOT NULL constraint
+            p_issys = data.get('issys', 0)
+            p_uid = data.get('uid', 0)
+            p_companyid = data.get('companyid', 0)
 
-        if not data.get('vid'):
+            # Call the PostgreSQL function
+            query = """
+                SELECT * FROM public.ftsavetblattleave(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            params = [
+                p_vid,
+                p_vname,
+                p_vno,
+                p_empid,
+                p_vdate,
+                p_shiftid,
+                p_leavetypeid,
+                p_contactnumber,
+                p_isapproved,
+                p_approvedby,
+                p_approveddate,
+                p_isposted,
+                p_postedby,
+                p_posteddate,
+                p_issys,
+                p_uid,
+                p_companyid
+            ]
+
+            with connection.cursor() as cursor:
+                cursor.execute(query, params)
+                columns = [col[0] for col in cursor.description]
+                result = cursor.fetchone()
+                
+            # Convert result to dictionary
+            result_dict = dict(zip(columns, result))
+            
+            if result_dict['status'] == '200':
+                return Response({
+                    "status": "0",
+                    "message": result_dict['msg'],
+                    "data": {"vid": result_dict['vid']}
+                })
+            else:
+                return Response({
+                    "status": "2",
+                    "message": result_dict['msg'],
+                    "error": result_dict['msg']
+                }, status=400)
+                
+        except Exception as e:
             return Response({
-                "status": "2",
-                "message": "data not saved",
-                "error": 'id is required',
-            })
-        attLeave = models.AttLeave.objects.get(vid = data.get('vid'))
-        serializer = serializers.AttLeaveSerializer(attLeave, data=request.data)
-        
-        if not serializer.is_valid():
-            return Response({
-                "status": "2",
-                "message": "data not updated",
-                "error": serializer.errors,
-            })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data updated",
-            "data": serializer.data
-        })
+                "status": "1",
+                "message": f"Error saving leave data: {str(e)}",
+                "data": []
+            }, status=500)
+    
+    def put(self, request):
+        # For update, we can use the same function as POST
+        return self.post(request)
     
     def delete(self, request):
         data = request.data
@@ -2624,6 +2819,92 @@ class AttLeaveAPI(APIView):
             "message": "data deleted",
             "data": {}
         })
+class LeaveBalanceAPI(APIView):
+    def get(self, request):
+        try:
+            p_orgini = request.query_params.get("orgini", "LTT")
+            p_vdate = request.query_params.get("vdate", datetime.now().date())
+            p_datefrom = request.query_params.get("datefrom", datetime.now().replace(day=1))
+            p_dateto = request.query_params.get("dateto", datetime.now())
+            p_cwhere = request.query_params.get("cwhere", "")
+            p_companyid = request.query_params.get("companyid", 1)
+            p_locationid = request.query_params.get("locationid", 0)
+            p_etypeid = request.query_params.get("etypeid", 1)
+            p_empid = request.query_params.get("empid", 0)
+            p_isau = request.query_params.get("isau", 0)
+            p_isexport = request.query_params.get("isexport", 0)
+            p_uid = request.query_params.get("uid", 0)
+
+            query = """
+                SELECT * FROM public.ftentryfillleavebalance(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            params = [
+                p_orgini, p_vdate, p_datefrom, p_dateto, p_cwhere,
+                p_companyid, p_locationid, p_etypeid, p_empid,
+                p_isau, p_isexport, p_uid
+            ]
+
+            with connection.cursor() as cursor:
+                cursor.execute(query, params)
+                columns = [col[0] for col in cursor.description]
+                rows = cursor.fetchall()
+
+            data = [dict(zip(columns, row)) for row in rows]
+
+            return Response({
+                "status": "0",
+                "message": "success",
+                "data": data
+            })
+        except Exception as e:
+            return Response({
+                "status": "1",
+                "message": str(e),
+                "data": []
+            }, status=500)
+class LeaveABAPI(APIView):
+    def get(self, request):
+        try:
+            p_orgini = request.query_params.get("orgini", "")
+            p_vdate = request.query_params.get("vdate", "2025-01-01")
+            p_datefrom = request.query_params.get("datefrom", "2020-01-01")
+            p_dateto = request.query_params.get("dateto", "2026-01-01")
+            p_cwhere = request.query_params.get("cwhere", "")
+            p_companyid = request.query_params.get("companyid", 1)
+            p_locationid = request.query_params.get("locationid", 1)
+            p_etypeid = request.query_params.get("etypeid", 1)
+            p_empid = request.query_params.get("empid", 2)
+            p_isau = request.query_params.get("isau", 0)
+            p_isexport = request.query_params.get("isexport", 0)
+            p_uid = request.query_params.get("uid", 1)
+
+            query = """
+                SELECT public.ftentryfillleaveab(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            params = [
+                p_orgini, p_vdate, p_datefrom, p_dateto, p_cwhere,
+                p_companyid, p_locationid, p_etypeid, p_empid,
+                p_isau, p_isexport, p_uid
+            ]
+
+            with connection.cursor() as cursor:
+                cursor.execute(query, params)
+                columns = [col[0] for col in cursor.description]
+                rows = cursor.fetchall()
+
+            data = [dict(zip(columns, row)) for row in rows]
+
+            return Response({
+                "status": "0",
+                "message": "success",
+                "data": data
+            })
+        except Exception as e:
+            return Response({
+                "status": "1",
+                "message": str(e),
+                "data": []
+            }, status=500)
 
 class AttLeaveSpecialAPI(APIView):
     def get(self, request):
@@ -2661,13 +2942,13 @@ class AttLeaveSpecialAPI(APIView):
     # def put (self, request):
     #     data = request.data
         
-    #     if not data.get('VID'):
+    #     if not data.get('vid'):
     #         return Response({
     #             "status": "2",
     #             "message": "data not saved",
     #             "error": 'id is required',
     #         })
-    #     attLeaveSpecial = models.AttLeaveSpecial.objects.get(VID = data.get('VID'))
+    #     attLeaveSpecial = models.AttLeaveSpecial.objects.get(vid = data.get('vid'))
     #     serializer = serializers.AttLeaveSpecialSerializer(attLeaveSpecial, data=request.data)
         
     #     if not serializer.is_valid():
@@ -2717,46 +2998,85 @@ class AttOTAPI(APIView):
             "data" : serializer.data
         })
 
-    def post(self, request):
-        data = request.data
-        serializer = serializers.AttOTSerializer(data = data)
-        if not serializer.is_valid():
-            return Response({
-                "status": "2",
-                "message": "data not saved",
-                "error": serializer.errors,
-            })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data save",
-            "data": serializer.data
-        })
+    # def post(self, request):
+    #     data = request.data
+    #     serializer = serializers.AttOTSerializer(data = data)
+    #     if not serializer.is_valid():
+    #         return Response({
+    #             "status": "2",
+    #             "message": "data not saved",
+    #             "error": serializer.errors,
+    #         })
+    #     serializer.save()
+    #     return Response({
+    #         "status": "0",
+    #         "message": "data save",
+    #         "data": serializer.data
+    #     })
     
-    def put (self, request):
+    
+    # def put (self, request):
+    #     data = request.data
+
+    #     if not data.get('vid'):
+    #         return Response({
+    #             "status": "2",
+    #             "message": "data not saved",
+    #             "error": 'id is required',
+    #         })
+    #     attOT = models.AttOT.objects.get(vid = data.get('vid'))
+    #     serializer = serializers.AttOTSerializer(attOT, data=request.data)
+        
+    #     if not serializer.is_valid():
+    #         return Response({
+    #             "status": "2",
+    #             "message": "data not updated",
+    #             "error": serializer.errors,
+    #         })
+    #     serializer.save()
+    #     return Response({
+    #         "status": "0",
+    #         "message": "data updated",
+    #         "data": serializer.data
+    #     })
+    def put(self, request):
         data = request.data
 
-        if not data.get('vid'):
+        try:
+            p_vid = data.get('vid') or 0
+            p_empid = data.get('empid')
+            p_vdate = data.get('vdate')
+            p_vname = data.get('vname') 
+            p_overtime = data.get('overtime') or 0
+            p_companyid = data.get('companyid') or 10
+            p_uid = data.get('uid') or 1001
+            p_computername = "EMS"  # or get from request.META
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT * FROM public.ftsavetblattot(%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    [p_vid, p_empid, p_vdate, p_vname, p_overtime, p_companyid, p_uid, p_computername]
+                )
+                result = cursor.fetchall()
+
+            # result is list of tuples → convert to dict
+            response_data = []
+            cols = ["vid", "status", "msg"]
+            for row in result:
+                response_data.append(dict(zip(cols, row)))
+
+            return Response({
+                "status": "0",
+                "message": "OT daily updated successfuly",
+                "data": response_data
+            })
+
+        except Exception as e:
             return Response({
                 "status": "2",
-                "message": "data not saved",
-                "error": 'id is required',
+                "message": "Error while saving O/T",
+                "error": str(e),
             })
-        attOT = models.AttOT.objects.get(vid = data.get('vid'))
-        serializer = serializers.AttOTSerializer(attOT, data=request.data)
-        
-        if not serializer.is_valid():
-            return Response({
-                "status": "2",
-                "message": "data not updated",
-                "error": serializer.errors,
-            })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data updated",
-            "data": serializer.data
-        })
     
     def delete(self, request):
         data = request.data
@@ -2792,21 +3112,59 @@ class AttOTMonthAPI(APIView):
             "data" : serializer.data
         })
 
+    # def post(self, request):
+    #     data = request.data
+    #     serializer = serializers.AttOTMonthSerializer(data = data)
+    #     if not serializer.is_valid():
+    #         return Response({
+    #             "status": "2",
+    #             "message": "data not saved",
+    #             "error": serializer.errors,
+    #         })
+    #     serializer.save()
+    #     return Response({
+    #         "status": "0",
+    #         "message": "data save",
+    #         "data": serializer.data
+    #     })
     def post(self, request):
         data = request.data
-        serializer = serializers.AttOTMonthSerializer(data = data)
-        if not serializer.is_valid():
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT * FROM ftsavetblattotmonth(
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                    )
+                """, [
+                    data.get("vid", 0),               # bigint
+                    data.get("empid"),                # bigint
+                    data.get("vdate"),                # date
+                    data.get("vname"),                # text
+                    data.get("overtime"),             # numeric
+                    data.get("isposted", 0),          # integer
+                    data.get("posteddate", "1900-01-01"), # date
+                    data.get("postedby", 0),          # bigint
+                    data.get("iscanceled", 0),        # integer
+                    data.get("canceldate", "1900-01-01"), # date
+                    data.get("canceledby", 0),        # bigint
+                    data.get("companyid"),            # bigint
+                    data.get("uid"),                  # bigint
+                    data.get("computername", "EMS")   # text
+                ])
+                result = cursor.fetchone()
+            
+            return Response({
+                "status": "0",
+                "message": "Data saved via function",
+                "data": result
+            })
+        except Exception as e:
             return Response({
                 "status": "2",
-                "message": "data not saved",
-                "error": serializer.errors,
+                "message": "Error while saving O/T",
+                "error": str(e)
             })
-        serializer.save()
-        return Response({
-            "status": "0",
-            "message": "data save",
-            "data": serializer.data
-        })
     
     def put (self, request):
         data = request.data
@@ -2848,6 +3206,23 @@ class AttOTMonthAPI(APIView):
             "status": "0",
             "message": "data deleted",
             "data": {}
+        })
+
+class AttDailyAttendanceFillGridAPI(APIView):
+    def get(self, request):
+        data = request.data
+
+        if data.get('vid'):
+            queryset = models.AttOTMonth.objects.get(vid = data.get('vid'))
+            serializer = serializers.AttOTMonthSerializer(queryset)
+        else :
+            queryset = models.AttOTMonth.objects.all()
+            serializer = serializers.AttOTMonthSerializer(queryset, many = True)
+        
+        return Response ({
+            "status": "0",
+            "message": "success",
+            "data" : serializer.data
         })
 
 class SalaryTypeAPI(APIView):
@@ -3726,8 +4101,8 @@ class SecRoleAPI(APIView):
                 "error": 'id is required',
             })
         
-        # if data.get('VID') == 0:
-            # if models.SecRole.objects.filter(VID = data.get("VID")).exists():
+        # if data.get('vid') == 0:
+            # if models.SecRole.objects.filter(vid = data.get("vid")).exists():
             #     return Response({
             #         "status": "1",
             #         "message": "data not saved",
@@ -3826,7 +4201,7 @@ class SecPageAPI(APIView):
             })
 
         if data.get('vid') == 0:
-            # if models.SecPage.objects.filter(VID = data.get("VID")).exists():
+            # if models.SecPage.objects.filter(vid = data.get("vid")).exists():
             #     return Response({
             #         "status": "1",
             #         "message": "data not saved",
@@ -4068,7 +4443,7 @@ class SecUserLocationAPI(APIView):
     def put (self, request):
         data = request.data
         
-        if not data.get('VID'):
+        if not data.get('vid'):
             return Response({
                 "status": "2",
                 "message": "data not saved",
@@ -4268,6 +4643,59 @@ class SecUserPageAPI(APIView):
             "data": {}
         })
 
+# class AttEntryAPI(APIView):
+#     def get(self, request):
+#         orgini = request.query_params.get('orgini')
+#         vdate = request.query_params.get('vdate')
+#         datefrom = request.query_params.get('datefrom')
+#         dateto = request.query_params.get('dateto')
+#         deptids = request.query_params.get('deptids')
+#         employeeidlist = request.query_params.get('employeeidlist')
+#         companyid = request.query_params.get('companyid')
+#         locationid = request.query_params.get('locationid')
+#         etypeid = request.query_params.get('etypeid')
+#         empid = request.query_params.get('empid')
+#         isau = request.query_params.get('isau')
+#         onlyot = request.query_params.get('onlyot')
+#         isexport = request.query_params.get('isexport')
+#         uid = request.query_params.get('uid')
+#         inflage = request.query_params.get('inflage')
+
+#         # print(orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
+
+#         try:
+#             rows = []
+#             with connection.cursor() as cursor:                 
+
+#                 cursor.execute("""  CALL spentryfillregister(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
+#                     orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage
+#                 ])
+
+#                 if inflage == '0':
+#                     cursor.execute(""" SELECT * FROM tblOneTime """)
+#                     results = cursor.fetchall()
+
+#                 if inflage == '1':
+#                     cursor.execute(""" SELECT * FROM multitime """)
+#                     results = cursor.fetchall()
+
+#                 if inflage == '2':
+#                     cursor.execute(""" SELECT * FROM multitime1 """)
+#                     results = cursor.fetchall()
+
+#                 # if results and cursor.description:
+#                 columns = [col[0] for col in cursor.description]
+#                 rows = [dict(zip(columns, row)) for row in results]
+#                 # print(rows)
+#                 # else:
+#                 #     print("No data returned or invalid query.")
+#         except Exception as e:
+#             print("DB Error occurred:", str(e))
+#             return Response({"error": str(e)}, status=500)
+#         finally:
+#             cursor.close()
+#         return Response(rows)
+
 class AttEntryAPI(APIView):
     def get(self, request):
         orgini = request.query_params.get('orgini')
@@ -4286,39 +4714,30 @@ class AttEntryAPI(APIView):
         uid = request.query_params.get('uid')
         inflage = request.query_params.get('inflage')
 
-        # print(orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
-
         try:
             rows = []
-            with connection.cursor() as cursor:                 
-
-                cursor.execute("""  CALL spentryfillregister(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
-                    orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage
+            with connection.cursor() as cursor:
+                # Use the function instead of procedure
+                cursor.execute("""
+                    SELECT * FROM ftentryfillregister(
+                        %s, %s, %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s, %s, %s
+                    )
+                """, [
+                    orgini, vdate, datefrom, dateto,
+                    deptids, employeeidlist, None,   # <-- p_cwhere passed as None
+                    companyid, locationid, etypeid, empid,
+                    isau, isexport, uid, inflage, onlyot
                 ])
 
-                if inflage == '0':
-                    cursor.execute(""" SELECT * FROM tblOneTime """)
-                    results = cursor.fetchall()
-
-                if inflage == '1':
-                    cursor.execute(""" SELECT * FROM multitime """)
-                    results = cursor.fetchall()
-
-                if inflage == '2':
-                    cursor.execute(""" SELECT * FROM multitime1 """)
-                    results = cursor.fetchall()
-
-                # if results and cursor.description:
+                results = cursor.fetchall()
                 columns = [col[0] for col in cursor.description]
                 rows = [dict(zip(columns, row)) for row in results]
-                # print(rows)
-                # else:
-                #     print("No data returned or invalid query.")
+
         except Exception as e:
             print("DB Error occurred:", str(e))
             return Response({"error": str(e)}, status=500)
-        finally:
-            cursor.close()
+
         return Response(rows)
 
     def post(self, request):
@@ -4339,71 +4758,243 @@ class AttEntryAPI(APIView):
 
         print(empid, vdate, vid1, vid2, shiftid, datein1, dateout1, datein2, dateout2, remarks, uid, computername)
 
-        # with connection.cursor() as cursor:
-        #     cursor.callproc("spsavetblattmain", [EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName])
-            # print(cursor.callproc("spsavetblattmain", [EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName]))
         with connection.cursor() as cursor:
-            cursor.execute(""" CALL spsavetblattmain(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
+            # Call function instead of procedure
+            cursor.execute("""
+                SELECT * FROM ftsavetblattmain(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, [
                 empid, vdate, vid1, vid2, shiftid,
                 datein1, dateout1, datein2, dateout2,
                 remarks, uid, computername
-                ])
-            cursor.execute("""  SELECT * FROM attmainentrystatus """)
-            # rows = cursor.fetchall()
+            ])
+
             columns = [col[0] for col in cursor.description]
             rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
-                        
+
             return Response(rows)
+
+
+# class AttChangeAPI(APIView):
+#     def get(self, request):
+#         orgini = request.query_params.get('orgini')
+#         vdate = request.query_params.get('vdate')
+#         datefrom = request.query_params.get('datefrom')
+#         dateto = request.query_params.get('dateto')
+#         deptids = request.query_params.get('deptids')
+#         employeeidlist = request.query_params.get('employeeidlist')
+#         companyid = request.query_params.get('companyid')
+#         locationid = request.query_params.get('locationid')
+#         etypeid = request.query_params.get('etypeid')
+#         empid = request.query_params.get('empid')
+#         isau = request.query_params.get('isau')
+#         onlyot = request.query_params.get('onlyot')
+#         isexport = request.query_params.get('isexport')
+#         uid = request.query_params.get('uid')
+#         inflage = request.query_params.get('inflage')
+
+#         # print(orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
+
+#         try:
+#             rows = []
+#             # with transaction.atomic():
+#             with connection.cursor() as cursor:                 
+
+#                 cursor.execute("""  CALL spentryfillregisterchange(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
+#                     orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage
+#                 ])
+
+#                 cursor.execute(""" SELECT * FROM MultiTimeChangeFinal """)
+#                 # cursor.execute(""" SELECT * FROM MultiTimeChange """)
+#                 results = cursor.fetchall()
+
+#                 # if results and cursor.description:
+
+#                 columns = [col[0] for col in cursor.description]
+#                 rows = [dict(zip(columns, row)) for row in results]
+#                 print(columns)
+#                 print(rows)
+#                 # else:
+#                 #     print("No data returned or invalid query.")
+#         except Exception as e:
+#             print("DB Error occurred:", str(e))
+#             return Response({"error": str(e)}, status=500)
+#         finally:
+#             cursor.close()
+#         return Response(rows)
+
+# class AttChangeAPI(APIView):
+#     def get(self, request):
+#         # Read query params
+#         params = {
+#             "orgini": request.query_params.get('orgini'),
+#             "vdate": request.query_params.get('vdate'),
+#             "datefrom": request.query_params.get('datefrom'),
+#             "dateto": request.query_params.get('dateto'),
+#             "deptids": request.query_params.get('deptids'),
+#             "employeeidlist": request.query_params.get('employeeidlist'),
+#             "companyid": request.query_params.get('companyid'),
+#             "locationid": request.query_params.get('locationid'),
+#             "etypeid": request.query_params.get('etypeid'),
+#             "empid": request.query_params.get('empid'),
+#             "isau": request.query_params.get('isau'),
+#             "onlyot": request.query_params.get('onlyot'),
+#             "isexport": request.query_params.get('isexport'),
+#             "uid": request.query_params.get('uid'),
+#             "inflage": request.query_params.get('inflage'),
+#         }
+
+#         try:
+#             with connection.cursor() as cursor:
+#                 cursor.execute("""
+#                     SELECT * FROM ft_entryfillregisterchange(
+#                         %(orgini)s, %(vdate)s, %(datefrom)s, %(dateto)s,
+#                         %(deptids)s, %(employeeidlist)s, %(companyid)s,
+#                         %(locationid)s, %(etypeid)s, %(empid)s,
+#                         %(isau)s, %(onlyot)s, %(isexport)s, %(uid)s, %(inflage)s
+#                     )
+#                 """, params)
+
+#                 results = cursor.fetchall()
+#                 columns = [col[0] for col in cursor.description]
+#                 rows = [dict(zip(columns, row)) for row in results]
+
+#             return Response(rows)
+
+#         except Exception as e:
+#             return Response({"error": str(e)}, status=500)
+
 
 class AttChangeAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('orgini')
-        vdate = request.query_params.get('vdate')
-        datefrom = request.query_params.get('datefrom')
-        dateto = request.query_params.get('dateto')
-        deptids = request.query_params.get('deptids')
-        employeeidlist = request.query_params.get('employeeidlist')
-        companyid = request.query_params.get('companyid')
-        locationid = request.query_params.get('locationid')
-        etypeid = request.query_params.get('etypeid')
-        empid = request.query_params.get('empid')
-        isau = request.query_params.get('isau')
-        onlyot = request.query_params.get('onlyot')
-        isexport = request.query_params.get('isexport')
-        uid = request.query_params.get('uid')
-        inflage = request.query_params.get('inflage')
+    # Collect query parameters
+        def clean_param(value, as_int=False):
+            if value in [None, ""]:
+                return None
+            return int(value) if as_int else value
 
-        # print(orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
+        orgini = clean_param(request.query_params.get('orgini'))
+        vdate = clean_param(request.query_params.get('vdate'))
+        datefrom = clean_param(request.query_params.get('datefrom'))
+        dateto = clean_param(request.query_params.get('dateto'))
+        deptids = clean_param(request.query_params.get('deptids'))   # text param
+        employeeidlist = clean_param(request.query_params.get('employeeidlist'))  # text param
+        companyid = clean_param(request.query_params.get('companyid'), as_int=True)
+        locationid = clean_param(request.query_params.get('locationid'), as_int=True)
+        etypeid = clean_param(request.query_params.get('etypeid'), as_int=True)
+        empid = clean_param(request.query_params.get('empid'), as_int=True)
+        isau = clean_param(request.query_params.get('isau'), as_int=True)
+        onlyot = clean_param(request.query_params.get('onlyot'), as_int=True)
+        isexport = clean_param(request.query_params.get('isexport'), as_int=True)
+        uid = clean_param(request.query_params.get('uid'), as_int=True)
+        inflage = clean_param(request.query_params.get('inflage'), as_int=True)
+
+        print("Clean Params:", orgini, vdate, datefrom, dateto, deptids, employeeidlist,
+            companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
 
         try:
             rows = []
-            # with transaction.atomic():
-            with connection.cursor() as cursor:                 
-
-                cursor.execute("""  CALL spentryfillregisterchange(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
-                    orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT * FROM ftentryfillregisterchange(
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                    )
+                """, [
+                    orgini, vdate, datefrom, dateto, deptids, employeeidlist,
+                    companyid, locationid, etypeid, empid, isau, onlyot,
+                    isexport, uid, inflage
                 ])
 
-                cursor.execute(""" SELECT * FROM MultiTimeChangeFinal """)
-                # cursor.execute(""" SELECT * FROM MultiTimeChange """)
                 results = cursor.fetchall()
+                if results and cursor.description:
+                    columns = [col[0] for col in cursor.description]
+                    rows = [dict(zip(columns, row)) for row in results]
 
-                # if results and cursor.description:
-
-                columns = [col[0] for col in cursor.description]
-                rows = [dict(zip(columns, row)) for row in results]
-                print(columns)
-                print(rows)
-                # else:
-                #     print("No data returned or invalid query.")
         except Exception as e:
-            print("DB Error occurred:", str(e))
+            print("DB Error (GET):", str(e))
             return Response({"error": str(e)}, status=500)
-        finally:
-            cursor.close()
+
         return Response(rows)
-    
+
+    # def post(self, request):
+    #     data = request.data
+
+    #     try:
+    #         with connection.cursor() as cursor:
+    #             cursor.execute("""
+    #                 SELECT * FROM ftsavetblclosingday(
+    #                     %s, %s, %s, %s, %s, %s,
+    #                     %s, %s, %s, %s, %s, %s, %s
+    #                 )
+    #             """, [
+    #                 data.get("vid"),
+    #                 data.get("empid"),
+    #                 data.get("vdate"),
+    #                 data.get("vid1"),
+    #                 data.get("vid2"),
+    #                 data.get("shiftid"),
+    #                 data.get("datein1"),
+    #                 data.get("dateout1"),
+    #                 data.get("datein2"),
+    #                 data.get("dateout2"),
+    #                 data.get("remarks"),
+    #                 data.get("uid"),
+    #                 data.get("computername")
+    #             ])
+
+    #             results = cursor.fetchall()
+    #             columns = [col[0] for col in cursor.description]
+    #             rows = [dict(zip(columns, row)) for row in results]
+
+    #         return Response(rows)
+
+    #     except Exception as e:
+    #         return Response({"error": str(e)}, status=500)
+    # def post(self, request):
+    #     data = request.data
+
+    #     empid = data.get('empid')
+    #     vdate = data.get('vdate')
+    #     vid1 = data.get('vid1')
+    #     vid2 = data.get('vid2')
+    #     shiftid = data.get('shiftid')
+    #     datein1 = data.get('datein1')
+    #     dateout1 = data.get('dateout1')
+    #     datein2 = data.get('datein2')
+    #     dateout2 = data.get('dateout2')
+    #     remarks = data.get('remarks')
+    #     uid = data.get('uid')
+    #     computername = data.get('computername')
+
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """
+    #             SELECT * FROM ftsavetblattmain(
+    #                 %s, %s, %s, %s, %s,
+    #                 %s, %s, %s, %s,
+    #                 %s, %s, %s
+    #             )
+    #             """,
+    #             [
+    #                 empid, vdate, vid1, vid2, shiftid,
+    #                 datein1, dateout1, datein2, dateout2,
+    #                 remarks, uid, computername
+    #             ]
+    #         )
+    #         columns = [col[0] for col in cursor.description]
+    #         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    #     return Response(rows)
+
     def post(self, request):
+        def normalize_datetime(value):
+            """
+            Convert empty strings to the sentinel '1900-01-01 00:00:00'
+            because Postgres function logic depends on it.
+            """
+            if value in ("", None):
+                return "1900-01-01 00:00:00"
+            return value
+
         data = request.data
 
         vid = data.get('vid')
@@ -4412,82 +5003,219 @@ class AttChangeAPI(APIView):
         vid1 = data.get('vid1')
         vid2 = data.get('vid2')
         shiftid = data.get('shiftid')
-        datein1 = data.get('datein1')
-        dateout1 = data.get('dateout1')
-        datein2 = data.get('datein2')
-        dateout2 = data.get('dateout2')
+
+        # Normalize dates
+        datein1 = normalize_datetime(data.get('datein1'))
+        dateout1 = normalize_datetime(data.get('dateout1'))
+        datein2 = normalize_datetime(data.get('datein2'))
+        dateout2 = normalize_datetime(data.get('dateout2'))
+
         remarks = data.get('remarks')
         uid = data.get('uid')
         computername = data.get('computername')
 
-        print(empid, vdate, vid1, vid2, shiftid, datein1, dateout1, datein2, dateout2, remarks, uid, computername)
-
-        # with connection.cursor() as cursor:
-        #     cursor.callproc("spsavetblattmain", [EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName])
-            # print(cursor.callproc("spsavetblattmain", [EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName]))
         with connection.cursor() as cursor:
-            cursor.execute(""" CALL spsavetblclosingday(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
-                vid, empid, vdate, vid1, vid2, shiftid,
-                datein1, dateout1, datein2, dateout2,
-                remarks, uid, computername
-                ])
-            cursor.execute("""  SELECT * FROM attclosingdaystatus """)
-            # rows = cursor.fetchall()
+            cursor.execute(
+                """
+                SELECT * FROM ftsavetblclosingday(
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s,
+                    %s, %s, %s, %s
+                )
+                """,
+                [
+                    vid, empid, vdate, vid1, vid2,
+                    shiftid, datein1, dateout1, datein2, dateout2,
+                    remarks, uid, computername
+                ]
+            )
             columns = [col[0] for col in cursor.description]
             rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        return Response(rows)
+
+
+
+    
+    # def post(self, request):
+    #     data = request.data
+
+    #     vid = data.get('vid')
+    #     empid = data.get('empid')
+    #     vdate = data.get('vdate')
+    #     vid1 = data.get('vid1')
+    #     vid2 = data.get('vid2')
+    #     shiftid = data.get('shiftid')
+    #     datein1 = data.get('datein1')
+    #     dateout1 = data.get('dateout1')
+    #     datein2 = data.get('datein2')
+    #     dateout2 = data.get('dateout2')
+    #     remarks = data.get('remarks')
+    #     uid = data.get('uid')
+    #     computername = data.get('computername')
+
+    #     print(empid, vdate, vid1, vid2, shiftid, datein1, dateout1, datein2, dateout2, remarks, uid, computername)
+
+    #     # with connection.cursor() as cursor:
+    #     #     cursor.callproc("spsavetblattmain", [EmpID, VDate, vid1, vid2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName])
+    #         # print(cursor.callproc("spsavetblattmain", [EmpID, VDate, vid1, vid2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName]))
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(""" CALL spsavetblclosingday(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
+    #             vid, empid, vdate, vid1, vid2, shiftid,
+    #             datein1, dateout1, datein2, dateout2,
+    #             remarks, uid, computername
+    #             ])
+    #         cursor.execute("""  SELECT * FROM attclosingdaystatus """)
+    #         # rows = cursor.fetchall()
+    #         columns = [col[0] for col in cursor.description]
+    #         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
                         
-            return Response(rows)
+    #         return Response(rows)
+
+# class AttSingleAPI(APIView):
+#     def get(self, request):
+#         orgini = request.query_params.get('orgini')
+#         vdate = request.query_params.get('vdate')
+#         datefrom = request.query_params.get('datefrom')
+#         dateto = request.query_params.get('dateto')
+#         deptids = request.query_params.get('deptids')
+#         employeeidlist = request.query_params.get('employeeidlist')
+#         companyid = request.query_params.get('companyid')
+#         locationid = request.query_params.get('locationid')
+#         etypeid = request.query_params.get('etypeid')
+#         empid = request.query_params.get('empid')
+#         isau = request.query_params.get('isau')
+#         onlyot = request.query_params.get('onlyot')
+#         isexport = request.query_params.get('isexport')
+#         uid = request.query_params.get('uid')
+#         inflage = request.query_params.get('inflage')
+
+#         # print(orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
+
+#         try:
+#             rows = []
+#             # with transaction.atomic():
+#             with connection.cursor() as cursor:                 
+
+#                 cursor.execute("""  CALL spentryfillregistersingle(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
+#                     orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage
+#                 ])
+
+#                 cursor.execute(""" SELECT * FROM attRegisterSingle """)
+#                 results = cursor.fetchall()
+
+#                 # if results and cursor.description:
+
+#                 columns = [col[0] for col in cursor.description]
+#                 rows = [dict(zip(columns, row)) for row in results]
+#                 print(columns)
+#                 print(rows)
+#                 # else:
+#                 #     print("No data returned or invalid query.")
+#         except Exception as e:
+#             print("DB Error occurred:", str(e))
+#             return Response({"error": str(e)}, status=500)
+#         finally:
+#             cursor.close()
+#         return Response(rows)
+    
+#     def post(self, request):
+#         data = request.data
+        
+#         vid = data.get('vid')
+#         empid = data.get('empid')
+#         vdate = data.get('vdate')
+#         vid1 = data.get('vid1')
+#         vid2 = data.get('vid2')
+#         shiftid = data.get('shiftid')
+#         datein1 = data.get('datein1')
+#         dateout1 = data.get('dateout1')
+#         datein2 = data.get('datein2')
+#         dateout2 = data.get('dateout2')
+#         remarks = data.get('remarks')
+#         uid = data.get('uid')
+#         computername = data.get('computername')
+
+#         print(empid, vdate, vid1, vid2, shiftid, datein1, dateout1, datein2, dateout2, remarks, uid, computername)
+
+#         # with connection.cursor() as cursor:
+#         #     cursor.callproc("spsavetblattmain", [EmpID, VDate, vid1, vid2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName])
+#             # print(cursor.callproc("spsavetblattmain", [EmpID, VDate, vid1, vid2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName]))
+#         with connection.cursor() as cursor:
+#             cursor.execute(""" CALL spsavetblattclosingdaysingle(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
+#                 vid, empid, vdate, vid1, vid2, shiftid,
+#                 datein1, dateout1, datein2, dateout2,
+#                 remarks, uid, computername
+#                 ])
+#             cursor.execute("""  SELECT * FROM attclosingdaysinglestatus """)
+#             # rows = cursor.fetchall()
+#             columns = [col[0] for col in cursor.description]
+#             rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+                        
+#             return Response(rows)
+def normalize_bigint(val, default=0):
+    try:
+        return int(val) if val not in (None, "", "null") else default
+    except Exception:
+        return default
+
+def normalize_text(val, default=""):
+    return val if val not in (None, "null") else default
+
+def normalize_date(val, default='1970-01-01'):
+    return val if val not in (None, "", "null") else default
+
 
 class AttSingleAPI(APIView):
     def get(self, request):
-        orgini = request.query_params.get('orgini')
-        vdate = request.query_params.get('vdate')
-        datefrom = request.query_params.get('datefrom')
-        dateto = request.query_params.get('dateto')
-        deptids = request.query_params.get('deptids')
-        employeeidlist = request.query_params.get('employeeidlist')
-        companyid = request.query_params.get('companyid')
-        locationid = request.query_params.get('locationid')
-        etypeid = request.query_params.get('etypeid')
-        empid = request.query_params.get('empid')
-        isau = request.query_params.get('isau')
-        onlyot = request.query_params.get('onlyot')
-        isexport = request.query_params.get('isexport')
-        uid = request.query_params.get('uid')
-        inflage = request.query_params.get('inflage')
-
-        # print(orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage)
+        # Normalize all inputs
+        orgini = normalize_text(request.query_params.get('orgini'))
+        vdate = normalize_date(request.query_params.get('vdate'))
+        datefrom = normalize_date(request.query_params.get('datefrom'))
+        dateto = normalize_date(request.query_params.get('dateto'))
+        deptids = normalize_text(request.query_params.get('deptids'))
+        employeeidlist = normalize_text(request.query_params.get('employeeidlist'))
+        companyid = normalize_bigint(request.query_params.get('companyid'))
+        locationid = normalize_bigint(request.query_params.get('locationid'))
+        etypeid = normalize_bigint(request.query_params.get('etypeid'))
+        empid = normalize_bigint(request.query_params.get('empid'))
+        isau = normalize_bigint(request.query_params.get('isau'))
+        onlyot = normalize_bigint(request.query_params.get('onlyot'))
+        isexport = normalize_bigint(request.query_params.get('isexport'))
+        uid = normalize_bigint(request.query_params.get('uid'))
+        inflage = normalize_bigint(request.query_params.get('inflage'))
+        vType = normalize_text(request.query_params.get('vType'))
 
         try:
-            rows = []
-            # with transaction.atomic():
-            with connection.cursor() as cursor:                 
-
-                cursor.execute("""  CALL spentryfillregistersingle(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
-                    orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage
+            with connection.cursor() as cursor:
+                # Call PostgreSQL function with correct number and type of parameters
+                cursor.execute("""
+                    SELECT * FROM fentryfillregistersingle(
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s
+                    )
+                """, [
+                    orgini, vdate, datefrom, dateto,
+                    deptids, employeeidlist,
+                    companyid, locationid, etypeid, empid,
+                    isau, onlyot, isexport, uid,
+                    inflage, vType
                 ])
 
-                cursor.execute(""" SELECT * FROM attRegisterSingle """)
                 results = cursor.fetchall()
-
-                # if results and cursor.description:
-
                 columns = [col[0] for col in cursor.description]
                 rows = [dict(zip(columns, row)) for row in results]
-                print(columns)
-                print(rows)
-                # else:
-                #     print("No data returned or invalid query.")
+
+            return Response(rows)
+
         except Exception as e:
             print("DB Error occurred:", str(e))
             return Response({"error": str(e)}, status=500)
-        finally:
-            cursor.close()
-        return Response(rows)
-    
+
     def post(self, request):
         data = request.data
-        
+
         vid = data.get('vid')
         empid = data.get('empid')
         vdate = data.get('vdate')
@@ -4502,31 +5230,36 @@ class AttSingleAPI(APIView):
         uid = data.get('uid')
         computername = data.get('computername')
 
-        print(empid, vdate, vid1, vid2, shiftid, datein1, dateout1, datein2, dateout2, remarks, uid, computername)
-
-        # with connection.cursor() as cursor:
-        #     cursor.callproc("spsavetblattmain", [EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName])
-            # print(cursor.callproc("spsavetblattmain", [EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName]))
-        with connection.cursor() as cursor:
-            cursor.execute(""" CALL spsavetblattclosingdaysingle(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
-                vid, empid, vdate, vid1, vid2, shiftid,
-                datein1, dateout1, datein2, dateout2,
-                remarks, uid, computername
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT * FROM fsavetblattclosingdaysingle(
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s, %s
+                    )
+                """, [
+                    vid, empid, vdate, vid1, vid2, shiftid,
+                    datein1, dateout1, datein2, dateout2,
+                    remarks, uid, computername
                 ])
-            cursor.execute("""  SELECT * FROM attclosingdaysinglestatus """)
-            # rows = cursor.fetchall()
-            columns = [col[0] for col in cursor.description]
-            rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
-                        
-            return Response(rows)
+
+                result = cursor.fetchone()
+                columns = [col[0] for col in cursor.description]
+                row = dict(zip(columns, result)) if result else {}
+
+            return Response(row)
+
+        except Exception as e:
+            print("DB Error occurred:", str(e))
+            return Response({"error": str(e)}, status=500)
 
     # def post(self, request):
     #     data = request.data
         
     #     EmpID = data.get('empid')
     #     VDate = data.get('vdate')
-    #     VID1 = data.get('vid1')
-    #     VID2 = data.get('vid2')
+    #     vid1 = data.get('vid1')
+    #     vid2 = data.get('vid2')
     #     ShiftID = data.get('shiftID')        
     #     DateIn1 = data.get('dateIn1')
     #     DateOut1 = data.get('dateOut1')
@@ -4536,14 +5269,14 @@ class AttSingleAPI(APIView):
     #     UID = data.get('uID')
     #     ComputerName = data.get('computerName')
 
-    #     print(EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName)
+    #     print(EmpID, VDate, vid1, vid2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName)
 
     #     # with connection.cursor() as cursor:
-    #     #     cursor.callproc("spsavetblattmain", [EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName])
-    #         # print(cursor.callproc("spsavetblattmain", [EmpID, VDate, VID1, VID2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName]))
+    #     #     cursor.callproc("spsavetblattmain", [EmpID, VDate, vid1, vid2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName])
+    #         # print(cursor.callproc("spsavetblattmain", [EmpID, VDate, vid1, vid2, ShiftID, DateIn1, DateOut1, DateIn2, DateOut2, Remarks, UID, ComputerName]))
     #     with connection.cursor() as cursor:
     #         cursor.execute(""" CALL spsavetblattmain(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
-    #             EmpID, VDate, VID1, VID2, ShiftID,
+    #             EmpID, VDate, vid1, vid2, ShiftID,
     #             DateIn1, DateOut1, DateIn2, DateOut2,
     #             Remarks, UID, ComputerName
     #             ])
@@ -4855,6 +5588,42 @@ class EmployeeLeaveBalanceAPI(APIView):
             cursor.close()
         return Response(rows)
     
+# class AttOTFillGridAPI(APIView):
+#     def get(self, request):
+#         orgini = request.query_params.get('orgini')
+#         vdate = request.query_params.get('vdate')
+#         datefrom = request.query_params.get('datefrom')
+#         dateto = request.query_params.get('dateto')
+#         deptids = request.query_params.get('deptids')
+#         employeeidlist = request.query_params.get('employeeidlist')
+#         cwhere = request.query_params.get('cwhere')
+#         companyid = request.query_params.get('companyid')
+#         locationid = request.query_params.get('locationid')
+#         etypeid = request.query_params.get('etypeid')
+#         empid = request.query_params.get('empid')
+#         isau = request.query_params.get('isau')
+#         onlyot = request.query_params.get('onlyot')
+#         isexport = request.query_params.get('isexport')
+#         uid = request.query_params.get('uid')
+#         inflage = request.query_params.get('inflage')
+
+#         try:
+#             rows = []
+#             with connection.cursor() as cursor:
+                
+#                 cursor.execute(""" SELECT * FROM ftentryfillotday(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
+#                                [orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage])
+#                 results = cursor.fetchall()
+                
+#                 columns = [col[0] for col in cursor.description]
+#                 rows = [dict(zip(columns, row)) for row in results]
+                
+#         except Exception as e:
+#             print("DB Error occurred:", str(e))
+#             return Response({"error": str(e)}, status=500)
+#         finally:
+#             cursor.close()
+#         return Response(rows)
 class AttOTFillGridAPI(APIView):
     def get(self, request):
         orgini = request.query_params.get('orgini')
@@ -4863,6 +5632,7 @@ class AttOTFillGridAPI(APIView):
         dateto = request.query_params.get('dateto')
         deptids = request.query_params.get('deptids')
         employeeidlist = request.query_params.get('employeeidlist')
+        cwhere = request.query_params.get('cwhere')  # This line should already exist
         companyid = request.query_params.get('companyid')
         locationid = request.query_params.get('locationid')
         etypeid = request.query_params.get('etypeid')
@@ -4876,9 +5646,31 @@ class AttOTFillGridAPI(APIView):
         try:
             rows = []
             with connection.cursor() as cursor:
-                
-                cursor.execute(""" SELECT * FROM ftentryfillotday(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [orgini, vdate, datefrom, dateto, deptids, employeeidlist, companyid, locationid, etypeid, empid, isau, onlyot, isexport, uid, inflage])
+                # Fix: Pass cwhere (the variable) instead of the undefined cwhere
+                # cursor.execute(""" SELECT * FROM    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
+                #                [orgini, vdate, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, inflage, onlyot])
+                cursor.execute(
+                    """SELECT * FROM public.ftentryfillotday(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                    [
+                        orgini,
+                        vdate,
+                        datefrom,
+                        dateto,
+                        deptids,
+                        employeeidlist,
+                        cwhere,
+                        companyid,
+                        locationid,
+                        etypeid,
+                        empid,
+                        isau,
+                        isexport,
+                        uid,
+                        inflage,
+                        onlyot,
+                    ],
+                )
+
                 results = cursor.fetchall()
                 
                 columns = [col[0] for col in cursor.description]
@@ -4887,8 +5679,7 @@ class AttOTFillGridAPI(APIView):
         except Exception as e:
             print("DB Error occurred:", str(e))
             return Response({"error": str(e)}, status=500)
-        finally:
-            cursor.close()
+        
         return Response(rows)
 
 class AttOTMonthFillGridAPI(APIView):
@@ -4940,7 +5731,7 @@ class GetEmployeeGratuityDetailAPI(APIView):
             rows = []
             with connection.cursor() as cursor:
 
-                cursor.execute(""" SELECT * FROM fngratuitystatus(%s, %s, %s, %s, %s, %s, %s); """, [orgini, empid, vdate, uid, isau, ignoreold, basicsalary])
+                cursor.execute(""" SELECT * FROM ftgratuitystatus(%s, %s, %s, %s, %s, %s, %s); """, [orgini, empid, vdate, uid, isau, ignoreold, basicsalary])
 
                 results = cursor.fetchall()
                 columns = [col[0] for col in cursor.description]
@@ -4973,7 +5764,7 @@ class EmployeeReportsAPI(APIView):
                 cursor.execute("""  CALL sprptemployee(%s, %s, %s, %s, %s, %s, %s, %s, %s) """, 
                                [ orgini, cwhere, vdate, isau, empid, isexport, compcode, uid, reporttype  ])
 
-                if  reporttype == 'EmpList' or reporttype == 'EmpCard' or reporttype == '' :
+                if  reporttype == 'emplist' or reporttype == 'EmpCard' or reporttype == '' :
                     cursor.execute(""" SELECT * FROM tblemployeelist """)
                     results = cursor.fetchall()
                 
@@ -5735,7 +6526,7 @@ class RptOverTimeSheetAPI(APIView):
             with connection.cursor() as cursor:
 
                 cursor.execute(""" SELECT * FROM ftrptmonthsalarysheet(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer ])
+                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showper ])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -5762,14 +6553,14 @@ class RptOverTimeSheetSummaryAPI(APIView):
         isau = request.query_params.get('isau')
         isexport = request.query_params.get('isexport')
         uid = request.query_params.get('uid')
-        showPer = request.query_params.get('showPer')
+        showper = request.query_params.get('showper')
 
         try:
             rows = []
             with connection.cursor() as cursor:
 
                 cursor.execute(""" SELECT * FROM ftrptmonthotsheetsum(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer ])
+                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showper ])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -5796,14 +6587,14 @@ class RptFinalSettlementAPI(APIView):
         isau = request.query_params.get('isau')
         isexport = request.query_params.get('isexport')
         uid = request.query_params.get('uid')
-        showPer = request.query_params.get('showPer')
+        showper = request.query_params.get('showper')
 
         try:
             rows = []
             with connection.cursor() as cursor:
 
                 cursor.execute(""" SELECT * FROM ftrptmonthfinalsettlement(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer ])
+                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showper ])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -5830,14 +6621,14 @@ class RptMonthSalarySheetAPI(APIView):
         isau = request.query_params.get('isau')
         isexport = request.query_params.get('isexport')
         uid = request.query_params.get('uid')
-        showPer = request.query_params.get('showPer')
+        showper = request.query_params.get('showper')
 
         try:
             rows = []
             with connection.cursor() as cursor:
 
                 cursor.execute(""" SELECT * FROM ftrptmonthotsheet(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer ])
+                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showper ])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -5864,14 +6655,14 @@ class RptSalaryEmployeeAPI(APIView):
         isau = request.query_params.get('isau')
         isexport = request.query_params.get('isexport')
         uid = request.query_params.get('uid')
-        showPer = request.query_params.get('showPer')
+        showper = request.query_params.get('showper')
 
         try:
             rows = []
             with connection.cursor() as cursor:
 
                 cursor.execute(""" SELECT * FROM ftrptmonthsalaryemployee(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer ])
+                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showper ])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -5898,14 +6689,14 @@ class RptMonthSalarySummaryAPI(APIView):
         isau = request.query_params.get('isau')
         isexport = request.query_params.get('isexport')
         uid = request.query_params.get('uid')
-        showPer = request.query_params.get('showPer')
+        showper = request.query_params.get('showper')
 
         try:
             rows = []
             with connection.cursor() as cursor:
 
                 cursor.execute(""" SELECT * FROM ftrptmonthsalarysum(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer ])
+                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showper ])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -5934,7 +6725,7 @@ class PaymentPlanFillGridAPI(APIView):
             rows = []
             with connection.cursor() as cursor:
 
-                cursor.execute(""" SELECT * FROM ftEntryFillLoanDed(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
+                cursor.execute(""" SELECT * FROM ftentryfillloanded(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
                                [ orgini, vdate, employeeidlist, companyid, locationid, etypeid, empid, isau, isexport, uid ])
                 results = cursor.fetchall()
 
@@ -5947,13 +6738,138 @@ class PaymentPlanFillGridAPI(APIView):
             cursor.close()
         return Response(rows)
 
+class PaymentPlanSaveAPI(APIView):
+    def post(self, request):
+        try:
+            # Parse JSON data from request body
+            if request.body:
+                data = json.loads(request.body.decode('utf-8'))
+            else:
+                return Response({
+                    "status": "400",
+                    "msg": "No data provided in request body"
+                }, status=400)
+            
+            print("Received data:", data)
+            
+            vdate = data.get('vdate')
+            deductions = data.get('deductions', [])
+            
+            print(f"Processing {len(deductions)} deductions")
+            
+            results = []
+            
+            with connection.cursor() as cursor:
+                for deduction in deductions:
+                    emp_id = deduction.get('empid')
+                    loan_id = deduction.get('loanid')
+                    amount = deduction.get('amount')
+                    isposted = deduction.get('isposted', 1)
+                    postedby = deduction.get('postedby', 1)
+                    posteddate = deduction.get('posteddate')
+                    isactive = deduction.get('isactive', 1)
+                    user_id = deduction.get('uid', 1)
+                    comp_id = deduction.get('companyid', 1)
+                    
+                    print(f"Processing deduction for empid: {emp_id}, loanid: {loan_id}, amount: {amount}")
+                    
+                    try:
+                        # Convert isactive from integer to boolean
+                        isactive_bool = bool(isactive)
+                        
+                        # Call the PostgreSQL function with proper type casting
+                        cursor.execute(
+                            """SELECT * FROM ftsavetblsalaryloandeduction(
+                                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                            )""",
+                            [
+                                0,  # p_vid (bigint)
+                                f"Loan Deduction {emp_id}",  # p_vname (varchar)
+                                f"LD{emp_id}",  # p_vno (varchar)
+                                vdate,  # p_vdate (date)
+                                int(emp_id),  # p_empid (bigint)
+                                int(loan_id),  # p_loanid (bigint)
+                                float(amount),  # p_amount (numeric)
+                                int(isposted),  # p_isapproved (integer) - Note: check if this should be isposted or another field
+                                int(postedby),  # p_approvedby (bigint)
+                                posteddate,  # p_approveddate (date)
+                                int(isposted),  # p_isposted (integer)
+                                int(postedby),  # p_postedby (bigint)
+                                posteddate,  # p_posteddate (date)
+                                isactive_bool,  # p_isactive (boolean) - Converted to boolean
+                                int(user_id),  # p_uid (bigint)
+                                int(comp_id)  # p_companyid (bigint)
+                            ]
+                        )
+                        
+                        result = cursor.fetchone()
+                        if result:
+                            results.append({
+                                "vid": result[0],
+                                "status": result[1],
+                                "msg": result[2]
+                            })
+                            print(f"Successfully processed deduction: {result}")
+                        else:
+                            results.append({
+                                "vid": 0,
+                                "status": "400",
+                                "msg": "No result returned from database function"
+                            })
+                            print(f"No result returned for deduction: {deduction}")
+                            
+                    except Exception as e:
+                        error_msg = f"Error processing deduction {deduction}: {str(e)}"
+                        print(error_msg)
+                        results.append({
+                            "vid": 0,
+                            "status": "500",
+                            "msg": error_msg
+                        })
+            
+            # Check if all operations were successful
+            success_count = sum(1 for result in results if result.get("status") == "200")
+            error_count = len(results) - success_count
+            
+            if error_count == 0:
+                return Response({
+                    "status": "200",
+                    "msg": f"Successfully saved {success_count} deduction(s).",
+                    "results": results
+                })
+            else:
+                errors = [result for result in results if result.get("status") != "200"]
+                return Response({
+                    "status": "207",  # 207 Multi-Status for partial success
+                    "msg": f"Successfully saved {success_count} deduction(s), failed to save {error_count} deduction(s).",
+                    "success_count": success_count,
+                    "error_count": error_count,
+                    "errors": errors
+                }, status=207)
+                
+        except json.JSONDecodeError as e:
+            error_msg = f"Invalid JSON format: {str(e)}"
+            print(error_msg)
+            return Response({
+                "status": "400",
+                "msg": error_msg
+            }, status=400)
+                
+        except Exception as e:
+            error_msg = f"Internal server error: {str(e)}"
+            print(error_msg)
+            return Response({
+                "status": "500",
+                "msg": error_msg
+            }, status=500)
+
 # class SavePaymentPlanAPI(APIView):
     
 #     def post(self, request):
 #         data = request.data
         
         
-#         VID = data.get('VID')
+#         vid = data.get('vid')
 #         VName = data.get('VName')
 #         VNo = data.get('VNo')
 #         VDate  = data.get('VDate')
@@ -5974,7 +6890,7 @@ class PaymentPlanFillGridAPI(APIView):
 
 #          with connection.cursor() as cursor:
 #             cursor.execute(""" CALL spsavetblsalaryloandeduction(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """, [
-#                 VID,VName,VNo,VDate,EmpID,LoanID,Amount,IsApproved
+#                 vid,VName,VNo,VDate,EmpID,LoanID,Amount,IsApproved
 #                 ,ApprovedBy,ApprovedDate,IsPosted,PostedBy
 #                 ,PostedDate,IsActive,UID,CompanyID     
 #                 ])
@@ -6001,14 +6917,14 @@ class RptMonthSalaryDeductionAPI(APIView):
         isau = request.query_params.get('isau')
         isexport = request.query_params.get('isexport')
         uid = request.query_params.get('uid')
-        showPer = request.query_params.get('showPer')
+        showper = request.query_params.get('showper')
 
         try:
             rows = []
             with connection.cursor() as cursor:
 
                 cursor.execute(""" SELECT * FROM ftrptmonthsalaryallowded(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer ])
+                               [ orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showper ])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -6035,14 +6951,14 @@ class RptMonthSalaryDeductionSumAPI(APIView):
         isau = request.query_params.get('isau')
         isexport = request.query_params.get('isexport')
         uid = request.query_params.get('uid')
-        showPer = request.query_params.get('showPer')
+        showper = request.query_params.get('showper')
 
         try:
             rows = []
             with connection.cursor() as cursor:
 
                 cursor.execute(""" SELECT * FROM ftrptmonthsalaryallowdedsum(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """,
-                               [orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showPer])
+                               [orgini, datefrom, dateto, deptids, employeeidlist, cwhere, companyid, locationid, etypeid, empid, isau, isexport, uid, showper])
                 results = cursor.fetchall()
 
                 columns = [col[0] for col in cursor.description]
@@ -6054,35 +6970,35 @@ class RptMonthSalaryDeductionSumAPI(APIView):
             cursor.close()
         return Response(rows)
 
-class PaymentPlanFillGridAPI(APIView):
-    def get(self, request):
-        orgini = request.query_params.get('orgini')
-        vdate = request.query_params.get('vdate')
-        employeeidlist = request.query_params.get('employeeidlist')
-        companyid = request.query_params.get('companyid')
-        locationid = request.query_params.get('locationid')
-        etypeid = request.query_params.get('etypeid')
-        empid = request.query_params.get('empid')
-        isau = request.query_params.get('isau')
-        isexport = request.query_params.get('isexport')
-        uid = request.query_params.get('uid')
+# class PaymentPlanFillGridAPI(APIView):
+#     def get(self, request):
+#         orgini = request.query_params.get('orgini')
+#         vdate = request.query_params.get('vdate')
+#         employeeidlist = request.query_params.get('employeeidlist')
+#         companyid = request.query_params.get('companyid')
+#         locationid = request.query_params.get('locationid')
+#         etypeid = request.query_params.get('etypeid')
+#         empid = request.query_params.get('empid')
+#         isau = request.query_params.get('isau')
+#         isexport = request.query_params.get('isexport')
+#         uid = request.query_params.get('uid')
 
-        try:
-            rows = []
-            with connection.cursor() as cursor:
+#         try:
+#             rows = []
+#             with connection.cursor() as cursor:
 
-                cursor.execute(""" SELECT * FROM ftEntryFillLoanDed(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
-                               [ orgini, vdate, employeeidlist, companyid, locationid, etypeid, empid, isau, isexport, uid ])
-                results = cursor.fetchall()
+#                 cursor.execute(""" SELECT * FROM ftEntryFillLoanDed(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s); """, 
+#                                [ orgini, vdate, employeeidlist, companyid, locationid, etypeid, empid, isau, isexport, uid ])
+#                 results = cursor.fetchall()
 
-                columns = [col[0] for col in cursor.description]
-                rows = [dict(zip(columns, row)) for row in results]
-        except Exception as e:
-            print("DB Error occurred:", str(e))
-            return Response({"error": str(e)}, status=500)
-        finally:
-            cursor.close()
-        return Response(rows)
+#                 columns = [col[0] for col in cursor.description]
+#                 rows = [dict(zip(columns, row)) for row in results]
+#         except Exception as e:
+#             print("DB Error occurred:", str(e))
+#             return Response({"error": str(e)}, status=500)
+#         finally:
+#             cursor.close()
+#         return Response(rows)
 
 class GetddlLocationAPI(APIView):
     def get(self, request):
@@ -6105,6 +7021,30 @@ class GetddlLocationAPI(APIView):
         finally:
             cursor.close()
         return Response(rows)
+# class LoginAPI(APIView):
+#     def get(self, request):
+#         p_userlogin = request.query_params.get('p_userlogin')
+#         p_userpswd = request.query_params.get('p_userpswd')
+#         p_locationid = request.query_params.get('p_locationid')
+#         p_logintype = request.query_params.get('p_logintype')
+#         p_appname = request.query_params.get('p_appname')
+
+#         try:
+#             rows = []
+#             with connection.cursor() as cursor:
+
+#                 cursor.execute(""" SELECT * FROM ftloginuser(%s, %s,%s, %s,%s); """, 
+#                                [ p_userlogin, p_userpswd, p_locationid, p_logintype, p_appname ])
+#                 results = cursor.fetchall()
+
+#                 columns = [col[0] for col in cursor.description]
+#                 rows = [dict(zip(columns, row)) for row in results]
+#         except Exception as e:
+#             print("DB Error occurred:", str(e))
+#             return Response({"error": str(e)}, status=500)
+#         finally:
+#             cursor.close()
+#         return Response(rows)
 class LoginAPI(APIView):
     def get(self, request):
         p_userlogin = request.query_params.get('p_userlogin')
@@ -6114,18 +7054,68 @@ class LoginAPI(APIView):
         p_appname = request.query_params.get('p_appname')
 
         try:
-            rows = []
             with connection.cursor() as cursor:
-
-                cursor.execute(""" SELECT * FROM ftloginuser(%s, %s,%s, %s,%s); """, 
-                               [ p_userlogin, p_userpswd, p_locationid, p_logintype, p_appname ])
+                # Step 1: Call ftloginuser
+                cursor.execute(
+                    """SELECT * FROM ftloginuser(%s, %s, %s, %s, %s);""",
+                    [p_userlogin, p_userpswd, p_locationid, p_logintype, p_appname]
+                )
                 results = cursor.fetchall()
-
                 columns = [col[0] for col in cursor.description]
                 rows = [dict(zip(columns, row)) for row in results]
+
+            # If login failed, just return ftloginuser result
+            if not rows or rows[0].get("errormessage"):
+                return Response(rows)
+
+            user_data = rows[0]
+
+            # Step 2: Get companyid from location (join query)
+            companyid = None
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT companyid FROM emsmodel_location WHERE vcode = %s LIMIT 1;",
+                    [user_data.get("locationcode")]
+                )
+                company_row = cursor.fetchone()
+                if company_row:
+                    companyid = company_row[0]
+
+            # Step 3: Fetch attglobals values for this company
+            globals_data = {}
+            if companyid:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """SELECT vname, vvalue 
+                           FROM attglobals 
+                           WHERE companyid = %s AND isactive = 1;""",
+                        [companyid]
+                    )
+                    globals_data = {row[0]: row[1] for row in cursor.fetchall()}
+
+            # Step 4: Build final response object
+            enriched_data = {
+                **user_data,
+                "companyid": companyid,
+                "org_ini": globals_data.get("ORG_INI", ""),
+                "org_name": globals_data.get("ORG_NAME", ""),
+                "current_version": globals_data.get("CURRENT_VERSION", ""),
+                "default_firstdate": globals_data.get("DEFAULT_FIRSTDATE", ""),
+                "fct": globals_data.get("FCT", ""),
+                "have_audit": globals_data.get("HAVE_AUDIT", ""),
+                "doj_actual": globals_data.get("DOJ_ACTUAL", ""),
+                "location_ini": globals_data.get("Location_INI", ""),
+                # Search fields empty at login
+                "searchecode": "",
+                "searchdate": "",
+                "searchmdatefrom": "",
+                "searchmdateto": "",
+                "searchlocation": ""
+            }
+
+            return Response([enriched_data])
+
         except Exception as e:
             print("DB Error occurred:", str(e))
             return Response({"error": str(e)}, status=500)
-        finally:
-            cursor.close()
-        return Response(rows)
+

@@ -708,6 +708,7 @@ class Employee(models.Model):
     blacklist = models.BooleanField(default=True)
     uid = models.IntegerField()
     tranzdatetime = models.DateTimeField(auto_now_add=True)
+    
     companyid = models.IntegerField()
 
     def save(self, *args, **kwargs):

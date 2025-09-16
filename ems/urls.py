@@ -23,6 +23,7 @@ urlpatterns = [
     path('ramazan/', views.RamazanAPI.as_view()),
     path('holiday/', views.HolidayAPI.as_view()),
     path('leaveBalance/', views.LeaveBalanceAPI.as_view()),
+    path('leaveAB/', views.LeaveABAPI.as_view()),  # New endpoint for ftentryfillleaveab
     path('leaveType/', views.LeaveTypeAPI.as_view()),
     path('shift/', views.ShiftAPI.as_view()),
     path('salaryIncrement/', views.SalaryIncrementAPI.as_view()),
@@ -35,6 +36,7 @@ urlpatterns = [
     path('attLeave/', views.AttLeaveAPI.as_view()),
     path('attOT/', views.AttOTAPI.as_view()),
     path('attOTMonth/', views.AttOTMonthAPI.as_view()),
+    path('attDailyAttendanceFillGrid/', views.AttDailyAttendanceFillGridAPI.as_view()),
     path('salaryType/', views.SalaryTypeAPI.as_view()),
     path('employeeType/', views.EmployeeTypeAPI.as_view()),
     path('gender/', views.GenderAPI.as_view()),
@@ -89,6 +91,7 @@ urlpatterns = [
     path('rptMonthSalarySummary/', views.RptMonthSalarySummaryAPI.as_view()),
     path('attEntryRosterMonth/', views.AttEntryRosterMonthAPI.as_view()),
     path('paymentPlanFillGrid/', views.PaymentPlanFillGridAPI.as_view()),
+    path('paymentPlanSave/', views.PaymentPlanSaveAPI.as_view()),
     path('rptMonthSalaryDeduction/', views.RptMonthSalaryDeductionAPI.as_view()),
     path('rptMonthSalaryDeductionSum/', views.RptMonthSalaryDeductionSumAPI.as_view()),
     path('getddlLocation/', views.GetddlLocationAPI.as_view()),

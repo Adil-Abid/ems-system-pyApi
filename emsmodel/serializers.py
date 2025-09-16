@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from emsmodel import models
+from emsmodel.models import Department
 
 
 class dummySerializer(serializers.ModelSerializer):
@@ -300,10 +301,37 @@ class EmpLocationTransferSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         self.fields['vno'].required = False
 
+# class EmployeeSerializer(serializers.ModelSerializer):
+#     displayname = serializers.SerializerMethodField()
+#     class Meta:
+#         model = models.Employee
+#         fields = '__all__'
+    
+#     def get_displayname(self, obj):
+#         dept_name = ""
+#         try:
+#             dept = Department.objects.get(pk=obj.deptid)
+#             dept_name = dept.vname
+#         except Department.DoesNotExist:
+#             dept_name = ""
+
+#         return f"{obj.ename} ({obj.empcode}) ({dept_name})"
 class EmployeeSerializer(serializers.ModelSerializer):
+    displayname = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Employee
         fields = '__all__'
+
+    def get_displayname(self, obj):
+        dept_name = ""
+        try:
+            dept = Department.objects.get(pk=obj.deptid)
+            dept_name = dept.vname
+        except Department.DoesNotExist:
+            dept_name = ""
+
+        return f"{obj.ename} ({obj.empcode}) ({dept_name})"
 
     def create(self, validated_data):
         last_emp = models.Employee.objects.order_by('-empid').first()
@@ -435,7 +463,7 @@ class SalaryGratuitySerializer(serializers.ModelSerializer):
         self.fields['chequedate'].required = False
 
     def create(self, validated_data):
-        last_vno = models.SalaryGratuity.objects.order_by('-VID').first()
+        last_vno = models.SalaryGratuity.objects.order_by('-vid').first()
         if last_vno and last_vno.vno:
             last_number = int(last_vno.vno.replace('v-', ''))
         else:
